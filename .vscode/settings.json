@@ -1,0 +1,17 @@
+{
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[js]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[ts]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "vetur.format.scriptInitialIndent": false,
+  "vetur.format.styleInitialIndent": false,
+  "vetur.validation.script": false, // 使用eslint检查js，以便支持使用ES feature 语法
+  "vetur.validation.template": false,
+  "editor.formatOnSave": true,
+  "files.autoSave": "onFocusChange" // 使用eslint检查js，以便支持使用ES feature 语法
+}
