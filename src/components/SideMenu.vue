@@ -22,8 +22,10 @@
 <script setup lang="ts">
 import { Menu } from "ant-design-vue";
 import Library from "@/components/Library/index.vue";
+import { useLayoutDataStore } from "@/stores/layoutData";
 const MenuItem = Menu.Item;
 
+const store = useLayoutDataStore();
 const select = ({ item, key, keyPath, selectedKeys, domEvent }: any) => {
   console.log(item, key, keyPath, selectedKeys, domEvent);
 };

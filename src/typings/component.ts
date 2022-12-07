@@ -9,3 +9,11 @@ export type ComponentsInfo = {
   type: ComponentsType;
   icon: string;
 };
+
+export type LayoutDataItem = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  i: string;
+};

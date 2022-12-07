@@ -1,8 +1,8 @@
 <template>
-  <GridLayout></GridLayout>
+  <GridLayout1></GridLayout1>
 </template>
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import GridLayout from "@/components/GridLayout.vue";
+import GridLayout1 from "@/components/GridLayout1.vue";
 </script>

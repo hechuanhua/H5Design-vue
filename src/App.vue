@@ -10,7 +10,7 @@
 import Header from "@/components/Header.vue";
 import SideMenu from "@/components/SideMenu.vue";
 import Setting from "@/components/Setting.vue";
-import GridLayout from "./components/GridLayout.vue";
+import GridLayout from "@/components/GridLayout.vue";
 </script>
 
 <style lang="less" scoped>

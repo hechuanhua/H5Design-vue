@@ -6,7 +6,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "preserveValueImports": false
+    "preserveValueImports": false,
+    "importsNotUsedAsValues": "remove",
+    "target": "esnext",
+    "module": "esnext"
   },
 
   "references": [
