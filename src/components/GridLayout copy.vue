@@ -23,42 +23,30 @@
       ref="gridItemRef"
       class="grid-item"
       v-for="item in layoutData"
-      :x="item.x"
-      :y="item.y"
-      :w="item.w"
-      :h="item.h"
-      :i="item.i"
-      :key="item.i"
+      :x="item.position.x"
+      :y="item.position.y"
+      :w="item.position.w"
+      :h="item.position.h"
+      :i="item.position.i"
+      :key="item.position.i"
       @resize="resizedEvent"
       @move="moveEvent"
       @resized="resizedEventEnd"
       @container-resized="containerResizedEvent"
-      @moved="moveEventEnd"
+      @moved="movedEvent"
     >
+      > >
       <Input v-if="item.type === ComponentsType.INPUT"></Input>
-      <Select
-        v-if="item.type === ComponentsType.SELECT"
-        v-model="item.config.value"
-        :options="item.config.options"
-        :style="{ width: '100%' }"
-        placeholder="请选择"
-        @change="
-          (value, option) => {
-            selectChange(value, option, item);
-          }
-        "
-      >
+      <Select v-if="item.type === ComponentsType.SELECT">
+        <SelectOptions>111</SelectOptions>
+        <SelectOptions>222</SelectOptions>
       </Select>
-      <GrldLayputClone
-        v-if="item.type === ComponentsType.FROM"
-        :v-model:layoutData="item.children"
-      ></GrldLayputClone>
     </grid-item>
   </grid-layout>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { Tabs, Input, Select } from "ant-design-vue";
 import { storeToRefs } from "pinia";
 import { useLayoutDataStore } from "@/stores/layoutData";
@@ -66,13 +54,13 @@ import GrldLayputClone from "./GridLayoutClone.vue";
 import { ComponentsInfo, ComponentsType } from "@/typings/Component";
 
 const TabPane = Tabs.TabPane;
-const SelectOption = Select.Option;
+const SelectOptions = Select.Option;
 const store = useLayoutDataStore();
-// const { layoutData } = storeToRefs(store) as any;
-const layoutData = ref<any>([]);
+const { layoutData } = storeToRefs(store);
+
 const layoutConfig = {
   width: 1200,
-  colNum: 1200,
+  colNum: 600,
   rowHeight: 1,
 };
 
@@ -84,27 +72,12 @@ store.$subscribe((mutation, state): any => {
   console.log("subscribe");
   localStorage.setItem("layoutData", JSON.stringify(state.layoutData));
 });
-watch(
-  () => layoutData.value,
-  () => {
-    console.log(JSON.parse(JSON.stringify(layoutData.value)), "qqqqqqq");
-  },
-  { deep: true }
-);
 
 const drop = (event: DragEvent) => {
   event.preventDefault();
-  if (
-    (event as any).path.some((item: any) => {
-      return item.className && item.className.includes("children-grid-layout");
-    })
-  ) {
-    console.log("return啦");
-    return;
-  }
   const tempData = event.dataTransfer?.getData("dragData");
   if (tempData) {
-    const dragData: ComponentsInfo = JSON.parse(tempData);
+    const dragData: any = JSON.parse(tempData);
 
     const ret = gridLayoutRef.value.$el.getBoundingClientRect();
     const position = {
@@ -112,11 +85,22 @@ const drop = (event: DragEvent) => {
         (event.pageX - ret.left) / (layoutConfig.width / layoutConfig.colNum)
       ),
       y: Math.round((event.pageY - ret.top) / layoutConfig.rowHeight),
-      w: dragData.w,
-      h: dragData.h,
+      w: dragData.width,
+      h: dragData.height,
       i: Math.random().toFixed(4),
     };
-    layoutData.value.push({ ...dragData, ...position, position });
+    dragData.position = position;
+    layoutData.value.push(dragData);
+    console.log(JSON.stringify(position));
+    gridLayoutRef.value.dragEvent(
+      // "dragstart",
+      "drop",
+      position.x,
+      position.y,
+      position.w,
+      position.h
+    );
+    console.log(JSON.stringify(layoutData.value), 88);
     console.log(
       "drop",
       layoutData.value,
@@ -134,8 +118,8 @@ const resizedEvent = (
 ) => {
   console.log("resizedEvent", i, newH, newW, newHPx, newWPx);
 };
-const moveEvent = (i: any, newX: any, newY: any) => {
-  console.log("moveEvent", i, newX, newY);
+const moveEvent = (i: any, newH: any, newW: any, newHPx: any, newWPx: any) => {
+  console.log("moveEvent", i, newH, newW, newHPx, newWPx);
 };
 const resizedEventEnd = (
   i: any,
@@ -155,17 +139,16 @@ const containerResizedEvent = (
 ) => {
   console.log("containerResizedEvent", i, newH, newW, newHPx, newWPx);
 };
-const moveEventEnd = (i: any, newX: any, newY: any) => {
-  console.log("moveEvent", i, newX, newY);
+const movedEvent = (i: any, newH: any, newW: any, newHPx: any, newWPx: any) => {
+  console.log("movedEvent", i, newH, newW, newHPx, newWPx);
 };
 
 const layoutChange = () => {
   console.log("layoutChange", layoutData.value);
 };
-
-const selectChange = (value: any, option: any, data: any) => {
-  console.log("selectChange", value, option, data);
-  data.config.value = value;
-};
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.grid-item {
+  background-color: #999;
+}
+</style>

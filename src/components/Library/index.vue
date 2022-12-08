@@ -5,7 +5,7 @@
       v-for="item in componentsList"
       :key="item.type"
       draggable="true"
-      @dragstart="dragstart($event, item.type)"
+      @dragstart="dragstart($event, item)"
     >
       {{ item.name }}
     </div>
@@ -14,31 +14,15 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
-import { ComponentsInfo, ComponentsType } from "@/typings/component";
+import { ComponentsInfo, ComponentsType } from "@/typings/Component";
 import { useLayoutDataStore } from "@/stores/layoutData";
+import { componentsList } from "./service";
 
 const store = useLayoutDataStore();
-const componentsList: ComponentsInfo[] = [
-  {
-    name: "文本",
-    type: ComponentsType.TEXT,
-    icon: "",
-  },
-  {
-    name: "图片",
-    type: ComponentsType.IMAGE,
-    icon: "",
-  },
-  {
-    name: "输入框",
-    type: ComponentsType.INPUT,
-    icon: "",
-  },
-];
 
-const dragstart = (event: DragEvent, type: ComponentsType) => {
+const dragstart = (event: DragEvent, data: ComponentsInfo) => {
   if (event.dataTransfer) {
-    event.dataTransfer.setData("text/plain", type);
+    event.dataTransfer.setData("dragData", JSON.stringify(data));
   }
 };
 </script>
@@ -48,7 +32,7 @@ const dragstart = (event: DragEvent, type: ComponentsType) => {
   cursor: pointer;
   flex: 1;
   margin-top: 5px;
-  padding: 10px 20px;
+  padding: 10px;
   border: 1px solid;
   width: 80px;
 }
