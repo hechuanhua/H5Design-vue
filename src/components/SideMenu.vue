@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-wrap">
+  <div class="menu-container">
     <Menu
       :selectedKeys="[1]"
       mode="inline"
@@ -32,7 +32,7 @@ const select = ({ item, key, keyPath, selectedKeys, domEvent }: any) => {
 </script>
 
 <style lang="less" scoped>
-.menu-wrap {
+.menu-container {
   position: fixed;
   top: 54px;
   left: 0;

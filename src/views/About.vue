@@ -4,5 +4,5 @@
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import GridLayout1 from "@/components/GridLayout1.vue";
+import GridLayout1 from "@/components/bak/GridLayout1.vue";
 </script>

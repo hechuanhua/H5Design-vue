@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h2 class="title">表单设计器</h2>
+    <h2 class="title">页面设计器</h2>
     <div class="operation">
       <Button @click="clearData">清空数据</Button>
       <Button type="primary" @click="preview">预览</Button>
@@ -17,10 +17,15 @@
   </Modal>
 </template>
 <script setup lang="ts">
-import { Button, Modal } from "ant-design-vue";
 import { ref } from "vue";
+import { Button, Modal } from "ant-design-vue";
+import { useLayoutDataStore } from "@/stores/layoutData";
+
+const store = useLayoutDataStore();
 const saveVisible = ref(false);
-const clearData = () => {};
+const clearData = () => {
+  store.layoutData = [];
+};
 const preview = () => {};
 const saveSubmit = () => {
   saveVisible.value = false;

@@ -3,16 +3,29 @@
   <main>
     <SideMenu></SideMenu>
     <Setting></Setting>
-    <div class="drag-wrap">
-      <GridLayout></GridLayout>
+    <div class="drag-container">
+      <GridLayout v-model:layoutData="layoutData"></GridLayout>
     </div>
   </main>
 </template>
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import Header from "@/components/Header.vue";
 import SideMenu from "@/components/SideMenu.vue";
-import Setting from "@/components/Setting.vue";
+import Setting from "@/components/Setting/index.vue";
+import { storeToRefs } from "pinia";
+import { useLayoutDataStore } from "@/stores/layoutData";
 import GridLayout from "@/components/GridLayout.vue";
+const store = useLayoutDataStore();
+const { layoutData } = storeToRefs(store) as any;
+
+watch(
+  () => layoutData.value,
+  () => {
+    localStorage.setItem("layoutData", JSON.stringify(layoutData.value));
+  },
+  { deep: true }
+);
 </script>
 
 <style lang="less" scoped>
@@ -22,7 +35,7 @@ main {
   margin-top: 100px;
 }
 
-.drag-wrap {
+.drag-container {
   width: 1200px;
   margin: 0 auto;
   min-height: 500px;
