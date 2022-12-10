@@ -13,6 +13,7 @@
   "dependencies": {
     "ant-design-vue": "^3.2.15",
     "less": "^4.1.3",
+    "monaco-editor": "^0.34.1",
     "pinia": "^2.0.26",
     "vue": "^3.2.45",
     "vue-grid-layout": "^3.0.0-beta1",
