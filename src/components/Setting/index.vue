@@ -51,6 +51,11 @@
             <Input placeholder="请输入跳转链接"></Input>
           </FormItem>
         </Form>
+        <FormItem :label="'自定义转换函数'">
+          <Button @click="monacoEditorVisible = true" type="primary"
+            >设置</Button
+          >
+        </FormItem>
       </TabPane>
     </Tabs>
     <MonacoEditor
