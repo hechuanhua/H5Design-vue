@@ -4,8 +4,11 @@ export enum ComponentsType {
   INPUT = "input",
   TABS = "tabs",
   SELECT = "select",
+  SELECT_EDIT = "select_edit",
   FROM = "from",
   LINEBAR = "linebar",
+  CODE = "code",
+  LINK = "link",
 }
 
 export type LayoutDataItem = {
@@ -28,4 +31,15 @@ export type ComponentsInfo = {
   config?: any;
   position: Partial<LayoutDataItem>;
   children?: ComponentsInfo[];
+  formConfig?: any;
 };
+
+export enum LayoutType {
+  EDIT = "edit",
+  PREVIEW = "preview",
+}
+// 'edit'|'preview'
+// export interface LayoutType {
+//   EDIT: "EDIT";
+//   PREVIEW: "PREVIEW";
+// }

@@ -1,5 +1,5 @@
 <template>
-  <div class="setting-container">
+  <div class="setting-container" v-if="selectGridItem.i">
     <Tabs v-model:active-key="tab">
       <TabPane tab="属性设置" key="1">
         <Form>
@@ -8,14 +8,30 @@
             v-for="item in selectGridItem.column"
             :key="item.key"
           >
-            <Input
-              :placeholder="`请输入${item.label}`"
-              v-model:value="selectGridItem.config[item.key]"
-              v-if="item.type === ComponentsType.INPUT"
-            />
             <div
-              class="select-setting"
+              :class="`${item.type}-setting`"
+              v-if="item.type === ComponentsType.INPUT"
+            >
+              <Input
+                :placeholder="`请输入${item.label}`"
+                v-model:value="selectGridItem.config[item.key]"
+              />
+            </div>
+            <div
+              :class="`${item.type}-setting`"
               v-if="item.type === ComponentsType.SELECT"
+            >
+              <Select
+                v-model:value="selectGridItem.config[item.key]"
+                :options="item.options"
+                :style="{ width: '100%' }"
+                placeholder="请选择"
+              >
+              </Select>
+            </div>
+            <div
+              :class="`${item.type}-setting`"
+              v-if="item.type === ComponentsType.SELECT_EDIT"
             >
               <FormItem v-for="(v, index) in selectGridItem.config.options">
                 <div class="flex">
@@ -36,27 +52,33 @@
                 ><PlusOutlined></PlusOutlined>新增选项</Button
               >
             </div>
-            <div class="text-setting" v-if="item.type === ComponentsType.TEXT">
+            <div
+              :class="`${item.type}-setting`"
+              v-if="item.type === ComponentsType.TEXT"
+            >
               <Input
                 :placeholder="`请输入${item.label}`"
                 v-model:value="selectGridItem.config[item.key]"
               />
             </div>
+            <div
+              :class="`${item.type}-setting`"
+              v-if="item.type === ComponentsType.CODE"
+            >
+              <Button @click="monacoEditorVisible = true" type="primary"
+                >设置</Button
+              >
+            </div>
           </FormItem>
         </Form>
       </TabPane>
-      <TabPane tab="交互设置" key="2">
+      <!-- <TabPane tab="交互设置" key="2">
         <Form>
           <FormItem :label="'跳转链接'">
             <Input placeholder="请输入跳转链接"></Input>
           </FormItem>
         </Form>
-        <FormItem :label="'自定义转换函数'">
-          <Button @click="monacoEditorVisible = true" type="primary"
-            >设置</Button
-          >
-        </FormItem>
-      </TabPane>
+      </TabPane> -->
     </Tabs>
     <MonacoEditor
       v-model:visible="monacoEditorVisible"
@@ -67,14 +89,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { Tabs, Form, Input, Select, Button } from "ant-design-vue";
-import FromContainer from "./FormContainer.vue";
-import InputSetting from "./InputSetting.vue";
-import SelectSetting from "./SelectSetting.vue";
-import {
-  ComponentsInfo,
-  ComponentsType,
-  LayoutDataItem,
-} from "@/typings/Component";
+import { ComponentsType } from "@/typings/Component";
 import { useLayoutDataStore } from "@/stores/layoutData";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons-vue";
 import MonacoEditor from "@/components/MonacoEditor.vue";
@@ -120,8 +135,8 @@ watch(
   () => store.currentId,
   () => {
     const ret = getCurrentLayout();
-    console.log(ret, 222);
     if (ret) {
+      console.log(ret, "selectGridItem");
       selectGridItem.value = ret;
     }
   },

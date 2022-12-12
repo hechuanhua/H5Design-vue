@@ -45,10 +45,16 @@ const InputData = {
   i: "",
   icon: "",
   config: {
+    key: "",
     value: "",
   },
   position: {},
   column: [
+    {
+      key: "key",
+      type: ComponentsType.INPUT,
+      label: "组件key",
+    },
     {
       key: "value",
       label: "文本",
@@ -82,6 +88,7 @@ const SelectData = {
   i: "",
   icon: "",
   config: {
+    key: "",
     value: "1",
     options: [
       {
@@ -100,9 +107,14 @@ const SelectData = {
   position: {},
   column: [
     {
+      key: "key",
+      type: ComponentsType.INPUT,
+      label: "组件key",
+    },
+    {
       key: "value",
       label: "选项",
-      type: ComponentsType.SELECT,
+      type: ComponentsType.SELECT_EDIT,
     },
   ],
 };
@@ -117,19 +129,18 @@ const FormData = {
   i: "",
   icon: "",
   config: {
+    formKey: "",
     url: "",
     method: "GET",
-    transformCode: `function transformData(data) {
-      // data 表示接口返回的数据源3333
-      const newData = []
-      console.log(data);
-  
-      return newData  // 返回自定义数据结构
-  }`,
   },
   position: {},
   children: [],
   column: [
+    {
+      key: "formKey",
+      type: ComponentsType.INPUT,
+      label: "表单key",
+    },
     {
       key: "url",
       type: ComponentsType.INPUT,
@@ -153,7 +164,7 @@ const FormData = {
   ],
 };
 
-const EchartsData = {
+const LineBarData = {
   name: "echart",
   type: ComponentsType.LINEBAR,
   w: 600,
@@ -163,32 +174,78 @@ const EchartsData = {
   i: "",
   icon: "",
   config: {
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "shadow",
+    echartData: {
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow",
+        },
       },
-    },
-    xAxis: {
-      type: "category",
-      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    yAxis: {
-      type: "value",
-    },
-    series: [
-      {
-        data: [120, 200, 150, 80, 70, 110, 130],
-        type: "bar",
+      xAxis: {
+        type: "category",
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       },
-      {
-        data: [120, 200, 150, 80, 70, 110, 130],
-        type: "bar",
+      yAxis: {
+        type: "value",
       },
-    ],
+      series: [
+        {
+          data: [120, 200, 150, 80, 70, 110, 130],
+          type: "bar",
+        },
+        {
+          data: [120, 200, 150, 80, 70, 110, 130],
+          type: "bar",
+        },
+      ],
+    },
+    link: "",
+    transformCode: `function transformData(data) {
+      // data 表示接口返回的数据源3333
+      const newData = {
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+          },
+        },
+        xAxis: {
+          type: "category",
+          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            data: [120, 200, 150, 80, 70, 110, 130],
+            type: "bar",
+          },
+          {
+            data: [120, 200, 150, 80, 70, 110, 130],
+            type: "bar",
+          },
+        ],
+      }
+      console.log(data);
+  
+      return newData  // 返回自定义数据结构
+  }`,
   },
   position: {},
-  column: [],
+  column: [
+    {
+      key: "link",
+      type: ComponentsType.INPUT,
+      label: "关联表单key",
+    },
+    {
+      key: "transformCode",
+      type: ComponentsType.CODE,
+      label: "自定义转换函数",
+      options: [],
+    },
+  ],
 };
 export const componentsList: ComponentsInfo[] = [
   TextData,
@@ -197,5 +254,5 @@ export const componentsList: ComponentsInfo[] = [
   TabsData,
   SelectData,
   FormData,
-  EchartsData,
+  LineBarData,
 ];

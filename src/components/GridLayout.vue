@@ -22,7 +22,7 @@
     @dragend.prevent
     @dragover.prevent
     ref="gridLayoutRef"
-    :class="{ 'children-grid-layout': isChildren }"
+    :class="['gridLayout', { 'children-grid-layout': isChildren }]"
   >
     <grid-item
       ref="gridItemRef"
@@ -36,6 +36,7 @@
       :key="item.i"
       @click.stop="selectGridItem(item)"
     >
+      <span class="formKey">{{ item.config.formKey }}</span>
       <div v-if="item.type === ComponentsType.TEXT">
         {{ item.config.text }}
       </div>
@@ -46,6 +47,19 @@
       <Select
         v-if="item.type === ComponentsType.SELECT"
         v-model="item.config.value"
+        :options="item.config.options"
+        :style="{ width: '100%' }"
+        placeholder="请选择"
+        @change="
+          (value, option) => {
+            selectChange(value, option, item);
+          }
+        "
+      >
+      </Select>
+      <Select
+        v-if="item.type === ComponentsType.LINK"
+        v-model="item.config.link"
         :options="item.config.options"
         :style="{ width: '100%' }"
         placeholder="请选择"
@@ -127,10 +141,9 @@ const drop = (event: DragEvent) => {
   event.preventDefault();
   event.stopPropagation();
   const tempData = event.dataTransfer?.getData("dragData");
-  console.log("children=>drop", props);
   if (tempData) {
     const dragData: any = JSON.parse(tempData);
-
+    console.log(dragData, "dragData");
     const ret = gridLayoutRef.value.$el.getBoundingClientRect();
     const uuid = createUuid(8);
     const position = {
@@ -142,15 +155,17 @@ const drop = (event: DragEvent) => {
       h: dragData.h,
       i: uuid,
     };
-    propsData.value.push({ ...dragData, ...position, position });
+    propsData.value.push({ ...dragData, ...position });
 
     emit("update:layoutData", propsData.value);
     store.currentId = uuid;
-    nextTick(() => {
-      const echart = echarts.init(echartsRef.value[0]);
-      console.log(dragData, 555);
-      echart.setOption(dragData.config);
-    });
+    if (dragData.type === ComponentsType.LINEBAR) {
+      nextTick(() => {
+        const echart = echarts.init(echartsRef.value[0]);
+
+        echart.setOption(dragData.config.echartData);
+      });
+    }
   }
 };
 
@@ -164,21 +179,27 @@ const selectChange = (value: any, option: any, data: any) => {
 };
 
 const selectGridItem = (item: LayoutDataItem) => {
-  console.log(item, 888);
-  // currentId.value = item.i;
+  console.log(item, "selectGridItem");
   store.currentId = item.i;
 };
 </script>
 <style lang="less" scoped>
-.grid-item {
-  border: 1px solid #333;
-  &.active {
-    border: 2px solid red;
-    box-sizing: content-box;
+.gridLayout {
+  :deep(.grid-item) {
+    border: 1px solid #333;
+    &.active {
+      border: 2px solid red;
+      box-sizing: content-box;
+    }
+    .formKey {
+      position: absolute;
+      z-index: 111;
+      color: red;
+    }
   }
-}
-.echart {
-  // width: 600px;
-  height: 100%;
+  .echart {
+    // width: 600px;
+    height: 100%;
+  }
 }
 </style>

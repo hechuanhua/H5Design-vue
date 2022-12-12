@@ -9,9 +9,5 @@ export const useLayoutDataStore = defineStore("layoutData", () => {
   if (data && data.length) {
     layoutData.value = JSON.parse(data);
   }
-  const setLayoutData = (data: any) => {
-    layoutData.value = data;
-    console.log(data);
-  };
-  return { layoutData, currentId, setLayoutData };
+  return { layoutData, currentId };
 });

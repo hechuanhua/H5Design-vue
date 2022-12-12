@@ -14,11 +14,8 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
-import { ComponentsInfo, ComponentsType } from "@/typings/Component";
-import { useLayoutDataStore } from "@/stores/layoutData";
+import { ComponentsInfo } from "@/typings/Component";
 import { componentsList } from "./service";
-
-const store = useLayoutDataStore();
 
 const dragstart = (event: DragEvent, data: ComponentsInfo) => {
   if (event.dataTransfer) {

@@ -29,7 +29,9 @@ const clearData = () => {
     currentId: "",
   });
 };
-const preview = () => {};
+const preview = () => {
+  window.open("/preview");
+};
 const saveSubmit = () => {
   saveVisible.value = false;
 };
