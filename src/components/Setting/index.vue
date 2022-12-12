@@ -5,17 +5,43 @@
         <Form>
           <FormItem
             :label="item.label"
-            v-for="(item, index) in selectGridItem.column"
-            :key="index"
+            v-for="item in selectGridItem.column"
+            :key="item.key"
           >
             <Input
               :placeholder="`请输入${item.label}`"
+              v-model:value="selectGridItem.config[item.key]"
               v-if="item.type === ComponentsType.INPUT"
             />
-            <Select
-              :options="item.options"
-              v-else-if="item.type === ComponentsType.SELECT"
-            ></Select>
+            <div
+              class="select-setting"
+              v-if="item.type === ComponentsType.SELECT"
+            >
+              <FormItem v-for="(v, index) in selectGridItem.config.options">
+                <div class="flex">
+                  <Input v-model:value="v.value"></Input>
+                  <Input v-model:value="v.label"></Input>
+                  <Button
+                    type="link"
+                    @click="deleteOptionItem(index)"
+                    v-if="selectGridItem.config.options.length > 1"
+                    ><MinusCircleOutlined
+                  /></Button>
+                </div>
+              </FormItem>
+              <Button
+                type="link"
+                @click="addOptionItem"
+                v-if="selectGridItem.config.options.length"
+                ><PlusOutlined></PlusOutlined>新增选项</Button
+              >
+            </div>
+            <div class="text-setting" v-if="item.type === ComponentsType.TEXT">
+              <Input
+                :placeholder="`请输入${item.label}`"
+                v-model:value="selectGridItem.config[item.key]"
+              />
+            </div>
           </FormItem>
         </Form>
       </TabPane>
@@ -31,7 +57,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { Tabs, Form, Input, Select } from "ant-design-vue";
+import { Tabs, Form, Input, Select, Button } from "ant-design-vue";
 import FromContainer from "./FormContainer.vue";
 import InputSetting from "./InputSetting.vue";
 import SelectSetting from "./SelectSetting.vue";
@@ -41,7 +67,7 @@ import {
   LayoutDataItem,
 } from "@/typings/Component";
 import { useLayoutDataStore } from "@/stores/layoutData";
-
+import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons-vue";
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 
@@ -49,23 +75,41 @@ const store = useLayoutDataStore();
 
 const selectGridItem = ref<any>({});
 
-const getFlatLayout = () => {
-  const arr: any[] = [];
-  store.layoutData.forEach((item) => {
-    arr.push(item);
-    if (item.children) {
-      item.children.forEach((v) => arr.push(v));
-    }
+const addOptionItem = () => {
+  selectGridItem.value.config.options.push({
+    label: "",
+    value: "",
   });
-  return arr;
+};
+const deleteOptionItem = (index: number) => {
+  selectGridItem.value.config.options.splice(index, 1);
+};
+
+const getCurrentLayout = () => {
+  let current = null;
+  for (let i = 0; i < store.layoutData.length; i++) {
+    if (store.layoutData[i].i === store.currentId) {
+      current = store.layoutData[i];
+      break;
+    }
+    const children = store.layoutData[i].children;
+    if (children && children.length) {
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].i === store.currentId) {
+          current = children[i];
+          break;
+        }
+      }
+    }
+  }
+  return current;
 };
 
 watch(
   () => store.currentId,
   () => {
-    console.log(333, store.currentId);
-    const flatLayout = getFlatLayout();
-    const ret = flatLayout.find((item) => item.i === store.currentId);
+    const ret = getCurrentLayout();
+    console.log(ret, 222);
     if (ret) {
       selectGridItem.value = ret;
     }
@@ -86,8 +130,9 @@ const tab = ref("1");
   right: 10px;
   top: 54px;
   bottom: 0;
-  width: 300px;
+  width: 330px;
   background: #fff;
   padding-left: 20px;
+  box-shadow: -5px 0px 10px 0px rgb(0 0 0 / 10%);
 }
 </style>

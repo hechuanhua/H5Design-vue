@@ -5,6 +5,7 @@ export enum ComponentsType {
   TABS = "tabs",
   SELECT = "select",
   FROM = "from",
+  LINEBAR = "linebar",
 }
 
 export type LayoutDataItem = {

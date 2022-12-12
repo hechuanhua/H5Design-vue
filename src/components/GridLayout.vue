@@ -36,7 +36,13 @@
       :key="item.i"
       @click.stop="selectGridItem(item)"
     >
-      <Input v-if="item.type === ComponentsType.INPUT"></Input>
+      <div v-if="item.type === ComponentsType.TEXT">
+        {{ item.config.text }}
+      </div>
+      <Input
+        v-if="item.type === ComponentsType.INPUT"
+        v-model:value="item.config.value"
+      ></Input>
       <Select
         v-if="item.type === ComponentsType.SELECT"
         v-model="item.config.value"
@@ -50,6 +56,11 @@
         "
       >
       </Select>
+      <div
+        ref="echartsRef"
+        v-if="item.type === ComponentsType.LINEBAR"
+        class="echart"
+      ></div>
       <GridLayoutSelf
         v-if="item.type === ComponentsType.FROM"
         v-model:layoutData="item.children"
@@ -67,8 +78,9 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch, PropType } from "vue";
+import { ref, onMounted, watch, PropType, nextTick } from "vue";
 import { Tabs, Input, Select } from "ant-design-vue";
+import * as echarts from "echarts";
 import {
   ComponentsInfo,
   ComponentsType,
@@ -88,6 +100,7 @@ const props = defineProps({
   },
 });
 
+const echartsRef = ref();
 const store = useLayoutDataStore();
 const propsData = ref(props.layoutData);
 const emit = defineEmits(["update:layoutData"]);
@@ -119,6 +132,7 @@ const drop = (event: DragEvent) => {
     const dragData: any = JSON.parse(tempData);
 
     const ret = gridLayoutRef.value.$el.getBoundingClientRect();
+    const uuid = createUuid(8);
     const position = {
       x: Math.round(
         (event.pageX - ret.left) / (layoutConfig.width / layoutConfig.colNum)
@@ -126,18 +140,17 @@ const drop = (event: DragEvent) => {
       y: Math.round((event.pageY - ret.top) / layoutConfig.rowHeight),
       w: dragData.w,
       h: dragData.h,
-      i: createUuid(8),
+      i: uuid,
     };
     propsData.value.push({ ...dragData, ...position, position });
-    // propsData.value = props.layoutData.concat(position);
 
-    console.log(propsData.value, JSON.stringify(props.layoutData), 111);
     emit("update:layoutData", propsData.value);
-    console.log(
-      "drop",
-      props.layoutData,
-      event.dataTransfer?.getData("dragData")
-    );
+    store.currentId = uuid;
+    nextTick(() => {
+      const echart = echarts.init(echartsRef.value[0]);
+      console.log(dragData, 555);
+      echart.setOption(dragData.config);
+    });
   }
 };
 
@@ -158,10 +171,14 @@ const selectGridItem = (item: LayoutDataItem) => {
 </script>
 <style lang="less" scoped>
 .grid-item {
-  background-color: #999;
+  border: 1px solid #333;
   &.active {
     border: 2px solid red;
     box-sizing: content-box;
   }
+}
+.echart {
+  // width: 600px;
+  height: 100%;
 }
 </style>

@@ -3,13 +3,22 @@ import { ComponentsInfo, ComponentsType } from "@/typings/Component";
 const TextData = {
   name: "文本",
   type: ComponentsType.TEXT,
-  w: 30,
-  h: 50,
+  w: 200,
+  h: 32,
   x: 0,
   y: 0,
   i: "",
   icon: "",
-  config: {},
+  config: {
+    text: "",
+  },
+  column: [
+    {
+      key: "text",
+      label: "文本",
+      type: ComponentsType.TEXT,
+    },
+  ],
   position: {},
 };
 
@@ -74,6 +83,12 @@ const SelectData = {
   icon: "",
   config: {
     value: "1",
+    options: [
+      {
+        label: "选项1",
+        value: "1",
+      },
+    ],
   },
   position: {},
   column: [
@@ -81,16 +96,6 @@ const SelectData = {
       key: "value",
       label: "选项",
       type: ComponentsType.SELECT,
-      options: [
-        {
-          label: "选项1",
-          value: "1",
-        },
-        {
-          label: "选项2",
-          value: "2",
-        },
-      ],
     },
   ],
 };
@@ -134,6 +139,43 @@ const FormData = {
   ],
 };
 
+const EchartsData = {
+  name: "echart",
+  type: ComponentsType.LINEBAR,
+  w: 600,
+  h: 350,
+  x: 0,
+  y: 0,
+  i: "",
+  icon: "",
+  config: {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    xAxis: {
+      type: "category",
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: "bar",
+      },
+      {
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: "bar",
+      },
+    ],
+  },
+  position: {},
+  column: [],
+};
 export const componentsList: ComponentsInfo[] = [
   TextData,
   ImageData,
@@ -141,4 +183,5 @@ export const componentsList: ComponentsInfo[] = [
   TabsData,
   SelectData,
   FormData,
+  EchartsData,
 ];

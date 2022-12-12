@@ -24,7 +24,10 @@ import { useLayoutDataStore } from "@/stores/layoutData";
 const store = useLayoutDataStore();
 const saveVisible = ref(false);
 const clearData = () => {
-  store.layoutData = [];
+  store.$patch({
+    layoutData: [],
+    currentId: "",
+  });
 };
 const preview = () => {};
 const saveSubmit = () => {
