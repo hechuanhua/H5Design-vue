@@ -23,7 +23,7 @@
 		:class="[
 			'gridLayout',
 			{ 'gridLayout-preview': type === 'preview' },
-			{ 'children-grid-layout': isChildren },
+			{ 'gridLayout-children': isChildren },
 		]"
 	>
 		<grid-item
@@ -75,7 +75,7 @@ const props = defineProps({
 
 const layoutConfig = {
 	width: 1200,
-	colNum: 600,
+	colNum: 1200,
 	rowHeight: 1,
 };
 

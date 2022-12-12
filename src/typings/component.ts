@@ -38,8 +38,3 @@ export enum LayoutType {
   EDIT = "edit",
   PREVIEW = "preview",
 }
-// 'edit'|'preview'
-// export interface LayoutType {
-//   EDIT: "EDIT";
-//   PREVIEW: "PREVIEW";
-// }

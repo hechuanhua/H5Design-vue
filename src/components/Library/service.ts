@@ -25,7 +25,7 @@ const TextData = {
 const ImageData = {
   name: "图片",
   type: ComponentsType.TEXT,
-  w: 30,
+  w: 300,
   h: 50,
   x: 0,
   y: 0,
@@ -66,7 +66,7 @@ const InputData = {
 const TabsData = {
   name: "标签页",
   type: ComponentsType.TABS,
-  w: 30,
+  w: 300,
   h: 50,
   x: 0,
   y: 0,
