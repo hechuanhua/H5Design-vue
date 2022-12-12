@@ -53,6 +53,10 @@
         </Form>
       </TabPane>
     </Tabs>
+    <MonacoEditor
+      v-model:visible="monacoEditorVisible"
+      :data="selectGridItem"
+    ></MonacoEditor>
   </div>
 </template>
 <script setup lang="ts">
@@ -68,6 +72,8 @@ import {
 } from "@/typings/Component";
 import { useLayoutDataStore } from "@/stores/layoutData";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons-vue";
+import MonacoEditor from "@/components/MonacoEditor.vue";
+
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 
@@ -118,6 +124,8 @@ watch(
     immediate: true,
   }
 );
+const monacoEditorVisible = ref(false);
+
 const tab = ref("1");
 </script>
 

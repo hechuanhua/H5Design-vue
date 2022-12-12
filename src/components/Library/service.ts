@@ -89,6 +89,13 @@ const SelectData = {
         value: "1",
       },
     ],
+    transformCode: `function transformData(data) {
+      // data 表示接口返回的数据源2222
+      const newData = []
+      console.log(data);
+  
+      return newData  // 返回自定义数据结构
+  }`,
   },
   position: {},
   column: [
@@ -112,6 +119,13 @@ const FormData = {
   config: {
     url: "",
     method: "GET",
+    transformCode: `function transformData(data) {
+      // data 表示接口返回的数据源3333
+      const newData = []
+      console.log(data);
+  
+      return newData  // 返回自定义数据结构
+  }`,
   },
   position: {},
   children: [],
