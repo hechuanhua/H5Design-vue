@@ -99,7 +99,7 @@ import {
   ComponentsInfo,
   ComponentsType,
   LayoutDataItem,
-} from "@/typings/Component";
+} from "@/typings/Common";
 import { useLayoutDataStore } from "@/stores/layoutData";
 import { createUuid } from "@/utils/index";
 

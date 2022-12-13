@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { Tabs, Form, Input, Select, Button } from "ant-design-vue";
-import { ComponentsType } from "@/typings/Component";
+import { ComponentsType } from "@/typings/Common";
 import { useLayoutDataStore } from "@/stores/layoutData";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons-vue";
 import MonacoEditor from "@/components/MonacoEditor.vue";

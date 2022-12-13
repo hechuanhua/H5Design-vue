@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
-import { ComponentsInfo } from "@/typings/Component";
+import { ComponentsInfo } from "@/typings/Common";
 import { componentsList } from "./service";
 
 const dragstart = (event: DragEvent, data: ComponentsInfo) => {

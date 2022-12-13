@@ -1,4 +1,4 @@
-import { ComponentsInfo, ComponentsType } from "@/typings/Component";
+import { ComponentsInfo, ComponentsType } from "@/typings/Common";
 
 const TextData = {
   name: "文本",

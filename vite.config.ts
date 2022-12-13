@@ -12,12 +12,7 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  // css: {
-  //   preprocessorOptions: {
-  //     less: {
-  //       javascriptEnabled: true,
-  //       additionalData: "@ant-prefix: ant;",
-  //     },
-  //   },
-  // },
+  server: {
+    host: "0.0.0.0",
+  },
 });
