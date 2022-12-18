@@ -13,17 +13,6 @@ export default defineConfig({
     },
   },
   server: {
-    host: "0.0.0.0",
-    proxy: {
-      "/api": {
-        target: "http://bds-idp.jpushoa.com",
-        changeOrigin: true,
-        rewrite: (path) => {
-          const newPath = path.replace(/^\/api/, "");
-          console.log(path, newPath, "newPath");
-          return newPath;
-        },
-      },
-    },
+    host: "0.0.0.0"
   },
 });
