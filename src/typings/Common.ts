@@ -1,23 +1,31 @@
 export enum ComponentsType {
-  TEXT = "text",
-  IMAGE = "image",
-  INPUT = "input",
-  TABS = "tabs",
-  SELECT = "select",
-  SELECT_EDIT = "select_edit",
-  FROM = "from",
-  LINEBAR = "linebar",
-  CODE = "code",
-  LINK = "link",
+  TEXT = "TEXT",
+  IMAGE = "IMAGE",
+  INPUT = "INPUT",
+  TABS = "TABS",
+  SELECT = "SELECT",
+  COMMONCONTAINER = "COMMONCONTAINER",
+  ECHARTS = "ECHARTS",
+  DATEPICKER = "DATEPICKER",
+  TABLE = "TABLE",
+  BUTTON = "BUTTON",
+  RADIOGROUP = "RADIOGROUP",
+  CONTAINER = "CONTAINER",
 }
 
-export type LayoutDataItem = {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  i: string;
-};
+export enum ColumnType {
+  INPUT = "input",
+  SELECT = "select",
+  SELECT_EDIT = "select_edit",
+  CODE = "code",
+  LINK = "link",
+  API = "api",
+  TEXTAREA = "textarea",
+  NUMBER = "number",
+  COLOR = "color",
+  RADIO = "radio",
+  SWITCH = "switch",
+}
 
 export type ComponentsInfo = {
   name: string;
@@ -28,10 +36,23 @@ export type ComponentsInfo = {
   w: number;
   h: number;
   i: string;
-  config?: any;
-  position: Partial<LayoutDataItem>;
+  parentId?: string;
+  column: any[];
+  config: {
+    [key: string]: any;
+  };
   children?: ComponentsInfo[];
-  formConfig?: any;
+  formConfig?: {
+    [key: string]: any;
+  };
+};
+
+export type LayoutDataItem = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  i: string;
 };
 
 export enum LayoutType {

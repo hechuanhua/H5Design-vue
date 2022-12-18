@@ -2,11 +2,11 @@
   <grid-layout
     v-model:layout="propsData"
     :style="{
-      width: `${layoutConfig.width}px`,
-      height: isChildren ? '200px' : '600px',
+      width: `${gridLayoutConfig.width}px`,
+      height: isChildren ? '200px' : '1600px',
     }"
-    :col-num="layoutConfig.colNum"
-    :row-height="layoutConfig.rowHeight"
+    :col-num="gridLayoutConfig.colNum"
+    :row-height="gridLayoutConfig.rowHeight"
     :is-draggable="isEdit"
     :is-resizable="isEdit"
     :is-bounded="isEdit"
@@ -40,15 +40,25 @@
     >
       <span
         class="formKey"
-        v-if="type === LayoutType.EDIT && item.type === ComponentsType.FROM"
+        v-if="
+          type === LayoutType.EDIT &&
+          item.type === ComponentsType.COMMONCONTAINER
+        "
       >
         {{ item.config.formKey }}
       </span>
+      <span
+        class="remove"
+        @click="removeItem(item)"
+        v-if="type === LayoutType.EDIT"
+        >x</span
+      >
       <Render
         :layoutItem="item"
         :dragData="dragData"
         :type="type"
         :layoutData="layoutData"
+        :isChildren="isChildren"
       ></Render>
     </grid-item>
   </grid-layout>
@@ -65,6 +75,7 @@ import {
 import { useLayoutDataStore } from "@/stores/layoutData";
 import { createUuid } from "@/utils/index";
 import Render from "./Render.vue";
+import { gridLayoutConfig } from "./service";
 
 const props = defineProps({
   layoutData: {
@@ -80,12 +91,6 @@ const props = defineProps({
     default: LayoutType.EDIT,
   },
 });
-
-const layoutConfig = {
-  width: 1200,
-  colNum: 1200,
-  rowHeight: 1,
-};
 
 const emit = defineEmits(["update:layoutData"]);
 const store = useLayoutDataStore();
@@ -106,9 +111,10 @@ const drop = (event: DragEvent) => {
     const uuid = createUuid(6);
     const position = {
       x: Math.round(
-        (event.pageX - ret.left) / (layoutConfig.width / layoutConfig.colNum)
+        (event.pageX - ret.left) /
+          (gridLayoutConfig.width / gridLayoutConfig.colNum)
       ),
-      y: Math.round((event.pageY - ret.top) / layoutConfig.rowHeight),
+      y: Math.round((event.pageY - ret.top) / gridLayoutConfig.rowHeight),
       w: dragData.value.w,
       h: dragData.value.h,
       i: uuid,
@@ -129,15 +135,22 @@ const drop = (event: DragEvent) => {
 };
 
 const selectGridItem = (item: LayoutDataItem) => {
-  console.log(item, "selectGridItem");
   if (props.type === LayoutType.PREVIEW) return;
+  console.log(item, "selectGridItem");
   store.currentId = item.i;
+};
+
+const removeItem = (item: LayoutDataItem) => {
+  propsData.value = propsData.value.filter((v) => v.i !== item.i);
+  if (store.currentId === item.i) {
+    store.currentId = "";
+  }
+  emit("update:layoutData", propsData.value);
 };
 
 watch(
   () => props.layoutData,
   () => {
-    console.log(99);
     propsData.value = props.layoutData;
   }
 );
@@ -148,12 +161,24 @@ watch(
     .grid-item {
       border: none;
     }
+    height: 100% !important;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .grid-item {
     border: 1px solid #333;
     &.active {
       border: 2px solid red;
       box-sizing: content-box;
+    }
+    .remove {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 20px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 10;
     }
     .formKey {
       position: absolute;

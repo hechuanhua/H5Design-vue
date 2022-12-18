@@ -37,7 +37,6 @@ const select = ({ item, key, keyPath, selectedKeys, domEvent }: any) => {
   left: 0;
   bottom: 0;
   background: #fff;
-  width: 380px;
   display: flex;
 }
 </style>

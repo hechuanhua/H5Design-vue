@@ -10,7 +10,7 @@
           >
             <div
               :class="`${item.type}-setting`"
-              v-if="item.type === ComponentsType.INPUT"
+              v-if="item.type === ColumnType.INPUT"
             >
               <Input
                 :placeholder="`请输入${item.label}`"
@@ -19,7 +19,7 @@
             </div>
             <div
               :class="`${item.type}-setting`"
-              v-if="item.type === ComponentsType.SELECT"
+              v-if="item.type === ColumnType.SELECT"
             >
               <Select
                 v-model:value="selectGridItem.config[item.key]"
@@ -31,7 +31,7 @@
             </div>
             <div
               :class="`${item.type}-setting`"
-              v-if="item.type === ComponentsType.SELECT_EDIT"
+              v-if="item.type === ColumnType.SELECT_EDIT"
             >
               <FormItem v-for="(v, index) in selectGridItem.config.options">
                 <div class="flex">
@@ -52,22 +52,71 @@
                 ><PlusOutlined></PlusOutlined>新增选项</Button
               >
             </div>
+
             <div
               :class="`${item.type}-setting`"
-              v-if="item.type === ComponentsType.TEXT"
+              v-if="item.type === ColumnType.API"
+            >
+              <InputGroup compact class="flex">
+                <Select
+                  :options="item.options"
+                  v-model:value="selectGridItem.config[item.key].method"
+                ></Select>
+                <Input
+                  v-model:value="selectGridItem.config[item.key].url"
+                ></Input>
+              </InputGroup>
+            </div>
+
+            <div
+              :class="`${item.type}-setting`"
+              v-if="item.type === ColumnType.TEXTAREA"
+            >
+              <Textarea v-model:value="selectGridItem.config[item.key]">
+              </Textarea>
+            </div>
+
+            <div
+              :class="`${item.type}-setting`"
+              v-if="item.type === ColumnType.NUMBER"
+            >
+              <InputNumber v-model:value="selectGridItem.config[item.key]">
+              </InputNumber>
+            </div>
+
+            <div
+              :class="`${item.type}-setting`"
+              v-if="item.type === ColumnType.COLOR"
             >
               <Input
-                :placeholder="`请输入${item.label}`"
                 v-model:value="selectGridItem.config[item.key]"
-              />
+                @focus="sketchColor = true"
+              ></Input>
+              <!-- <div class="sketch" v-if="sketchColor">
+                <div class="sketch-bg" @click="sketchColor = false"></div>
+                <Sketch v-model="selectGridItem.config[item.key]" @click.stop />
+              </div> -->
             </div>
+
             <div
               :class="`${item.type}-setting`"
-              v-if="item.type === ComponentsType.CODE"
+              v-if="item.type === ColumnType.RADIO"
             >
-              <Button @click="monacoEditorVisible = true" type="primary"
-                >设置</Button
+              <RadioGroup
+                v-model:value="selectGridItem.config[item.key]"
+                :options="item.options"
+                optionType="button"
+                @change="onRadioChange(selectGridItem.config[item.key])"
               >
+              </RadioGroup>
+            </div>
+
+            <div
+              :class="`${item.type}-setting`"
+              v-if="item.type === ColumnType.SWITCH"
+            >
+              <Switch v-model:checked="selectGridItem.config[item.key]">
+              </Switch>
             </div>
           </FormItem>
         </Form>
@@ -80,52 +129,97 @@
         </Form>
       </TabPane> -->
     </Tabs>
-    <MonacoEditor
-      v-model:visible="monacoEditorVisible"
-      :data="selectGridItem"
-    ></MonacoEditor>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { Tabs, Form, Input, Select, Button } from "ant-design-vue";
-import { ComponentsType } from "@/typings/Common";
+import {
+  Tabs,
+  Form,
+  Input,
+  Select,
+  Button,
+  Textarea,
+  InputNumber,
+  Radio,
+  Switch,
+} from "ant-design-vue";
+import { ColumnType, ComponentsType } from "@/typings/Common";
 import { useLayoutDataStore } from "@/stores/layoutData";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons-vue";
-import MonacoEditor from "@/components/MonacoEditor.vue";
+import { Sketch } from "@ckpack/vue-color";
 
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
+const InputGroup = Input.Group;
+const RadioGroup = Radio.Group;
 
 const store = useLayoutDataStore();
 
 const selectGridItem = ref<any>({});
+const sketchColor = ref(false);
 
 const addOptionItem = () => {
-  selectGridItem.value.config.options.push({
-    label: "",
-    value: "",
-  });
+  if (selectGridItem.value.type === ComponentsType.TABS) {
+    selectGridItem.value.config.options.push({
+      label: "",
+      value: "",
+      children: [],
+    });
+  } else {
+    selectGridItem.value.config.options.push({
+      label: "",
+      value: "",
+    });
+  }
 };
 const deleteOptionItem = (index: number) => {
   selectGridItem.value.config.options.splice(index, 1);
 };
 
-const getCurrentLayout = () => {
+const onRadioChange = (data: string | number | undefined) => {
+  if (selectGridItem.value.type === ComponentsType.ECHARTS) {
+    selectGridItem.value.config.echartData.series.forEach((item: any) => {
+      item.type = data;
+    });
+  }
+};
+
+const loop = (data: any) => {
   let current = null;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].i === store.currentId) {
+      current = data[i];
+      break;
+    }
+  }
+  return current;
+};
+
+const getCurrentLayout = () => {
+  let current: any = null;
   for (let i = 0; i < store.layoutData.length; i++) {
     if (store.layoutData[i].i === store.currentId) {
       current = store.layoutData[i];
       break;
     }
-    const children = store.layoutData[i].children;
-    if (children && children.length) {
-      for (let i = 0; i < children.length; i++) {
-        if (children[i].i === store.currentId) {
-          current = children[i];
-          break;
+
+    if (store.layoutData[i].type === ComponentsType.TABS) {
+      const options = store.layoutData[i].config.options;
+      for (let j = 0; j < options.length; j++) {
+        if (options[j].children.length) {
+          current = loop(options[j].children);
+          if (current) {
+            break;
+          }
         }
       }
+    }
+    if (current) break;
+    const children = store.layoutData[i].children;
+    if (children && children.length) {
+      current = loop(children);
+      if (current) break;
     }
   }
   return current;
@@ -134,6 +228,10 @@ const getCurrentLayout = () => {
 watch(
   () => store.currentId,
   () => {
+    if (!store.currentId) {
+      selectGridItem.value = {};
+      return;
+    }
     const ret = getCurrentLayout();
     if (ret) {
       console.log(ret, "selectGridItem");
@@ -144,7 +242,6 @@ watch(
     immediate: true,
   }
 );
-const monacoEditorVisible = ref(false);
 
 const tab = ref("1");
 </script>
@@ -162,5 +259,18 @@ const tab = ref("1");
   background: #fff;
   padding-left: 20px;
   box-shadow: -5px 0px 10px 0px rgb(0 0 0 / 10%);
+}
+.sketch {
+  .sketch-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0);
+  }
+  :deep(.vc-sketch) {
+    z-index: 10;
+  }
 }
 </style>

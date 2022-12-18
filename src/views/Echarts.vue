@@ -1,39 +1,30 @@
 <template>
-  <Header></Header>
-  <main>
-    <SideMenu></SideMenu>
-    <Setting></Setting>
-    <div class="drag-container" :style="{ width: gridLayoutConfig + 'px' }">
-      <GridLayout v-model:layoutData="layoutData"></GridLayout>
-    </div>
-  </main>
+  <div class="h100">
+    <div
+      ref="echartsRef"
+      class="echart"
+      :style="{
+        width: 1200 + 'px',
+        height: 500 + 'px',
+      }"
+    ></div>
+  </div>
 </template>
 <script setup lang="ts">
-import { watch } from "vue";
-import Header from "@/components/Header.vue";
-import SideMenu from "@/components/SideMenu.vue";
-import Setting from "@/components/Setting/index.vue";
-import { storeToRefs } from "pinia";
-import { useLayoutDataStore } from "@/stores/layoutData";
-import GridLayout from "@/components/GridLayout/index.vue";
+import { ref, onMounted } from "vue";
+import * as echarts from "echarts";
 import request from "@/utils/request";
-import { gridLayoutConfig } from "@/components/GridLayout/service";
-const store = useLayoutDataStore();
-const { layoutData } = storeToRefs(store) as any;
+import { useEchartsData } from "@/components/GridLayout/useData";
+import { echartsLine } from "@/components/GridLayout/exampleData";
 
-watch(
-  () => layoutData.value,
-  () => {
-    console.log(
-      JSON.parse(JSON.stringify(layoutData.value)),
-      "localStorage=>setItem"
-    );
-    localStorage.setItem("layoutData", JSON.stringify(layoutData.value));
-  },
-  { deep: true }
-);
+const echartsRef = ref();
+const options = useEchartsData(echartsLine, "line");
 
-//
+onMounted(() => {
+  const echart = echarts.init(echartsRef.value);
+  echart.setOption(options);
+  echart.resize();
+});
 
 const test = () => {
   const formData = new FormData();

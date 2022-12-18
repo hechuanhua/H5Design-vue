@@ -13,6 +13,11 @@ const router = createRouter({
       name: "preview",
       component: () => import("../views/Preview.vue"),
     },
+    {
+      path: "/echarts",
+      name: "echarts",
+      component: () => import("../views/Echarts.vue"),
+    },
   ],
 });
 
