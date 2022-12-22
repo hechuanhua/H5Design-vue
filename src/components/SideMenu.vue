@@ -1,10 +1,8 @@
 <template>
   <div class="menu-container">
     <Menu
-      :selectedKeys="[1]"
+      v-model:selectedKeys="selectedKeys"
       mode="inline"
-      theme="dark"
-      @select="select"
       :inlineCollapsed="false"
       :style="{
         width: '100px',
@@ -15,19 +13,19 @@
       }"
     >
       <MenuItem :key="1">组件库</MenuItem>
+      <MenuItem :key="2">模板库</MenuItem>
     </Menu>
-    <Library></Library>
+    <Library v-if="selectedKeys[0] === 1"></Library>
+    <Template v-if="selectedKeys[0] === 2"></Template>
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from "vue";
 import { Menu } from "ant-design-vue";
 import Library from "@/components/Library/index.vue";
-import { useLayoutDataStore } from "@/stores/layoutData";
+import Template from "@/components/Template.vue";
 const MenuItem = Menu.Item;
-
-const select = ({ item, key, keyPath, selectedKeys, domEvent }: any) => {
-  console.log(item, key, keyPath, selectedKeys, domEvent);
-};
+const selectedKeys = ref([1]);
 </script>
 
 <style lang="less" scoped>

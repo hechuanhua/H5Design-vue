@@ -5,7 +5,7 @@
       <Button @click="clearData">清空数据</Button>
       <Button type="primary" @click="preview">预览</Button>
       <Button @click="saveVisible = true">保存</Button>
-      <Button @click="publish">发布</Button>
+      <!-- <Button @click="publish">发布</Button> -->
     </div>
   </header>
   <Modal
@@ -14,15 +14,24 @@
     @cancel="saveVisible = false"
     @ok="saveSubmit"
   >
+    <Form>
+      <FormItem label="模板标题">
+        <Input v-model:value="pageTitle"></Input>
+      </FormItem>
+    </Form>
   </Modal>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { Button, Modal } from "ant-design-vue";
-import { useLayoutDataStore } from "@/stores/layoutData";
+import { Button, Modal, Form, Input, message } from "ant-design-vue";
+import { useEditDataStore } from "@/stores/editData";
+import { saveTemplate, getTemplateList } from "@/api";
 
-const store = useLayoutDataStore();
+const FormItem = Form.Item;
+const store = useEditDataStore();
 const saveVisible = ref(false);
+const pageTitle = ref("");
+
 const clearData = () => {
   store.$patch({
     layoutData: [],
@@ -34,6 +43,19 @@ const preview = () => {
 };
 const saveSubmit = () => {
   saveVisible.value = false;
+  saveTemplate({
+    title: pageTitle.value,
+    layout_data: localStorage.getItem("layoutData")!,
+  })
+    .then(() => {
+      message.success("保存成功");
+      getTemplateList().then((res) => {
+        store.templateData = res;
+      });
+    })
+    .catch((res) => {
+      console.log(res);
+    });
 };
 const publish = () => {};
 </script>

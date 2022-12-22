@@ -1,9 +1,9 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { ComponentsInfo } from "@/typings/Common";
-export const usePageDataStore = defineStore("pageData", () => {
+export const usePreviewDataStore = defineStore("pageData", () => {
   const params = ref<any>({});
-  const responseData = ref<any>({});
   const layoutData = ref<ComponentsInfo[]>([]);
-  return { params, responseData, layoutData };
+  const loading = ref(false);
+  return { params, layoutData, loading };
 });

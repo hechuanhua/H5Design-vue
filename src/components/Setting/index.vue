@@ -144,9 +144,15 @@ import {
   Radio,
   Switch,
 } from "ant-design-vue";
-import { ColumnType, ComponentsType } from "@/typings/Common";
-import { useLayoutDataStore } from "@/stores/layoutData";
+import {
+  ColumnType,
+  ComponentsType,
+  ComponentsInfo,
+  EchartsType,
+} from "@/typings/Common";
+import { useEditDataStore } from "@/stores/editData";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons-vue";
+import { gridLayoutConfig } from "@/components/GridLayout/service";
 import { Sketch } from "@ckpack/vue-color";
 
 const TabPane = Tabs.TabPane;
@@ -154,9 +160,9 @@ const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const RadioGroup = Radio.Group;
 
-const store = useLayoutDataStore();
+const store = useEditDataStore();
 
-const selectGridItem = ref<any>({});
+const selectGridItem = ref({} as ComponentsInfo);
 const sketchColor = ref(false);
 
 const addOptionItem = () => {
@@ -179,9 +185,14 @@ const deleteOptionItem = (index: number) => {
 
 const onRadioChange = (data: string | number | undefined) => {
   if (selectGridItem.value.type === ComponentsType.ECHARTS) {
-    selectGridItem.value.config.echartData.series.forEach((item: any) => {
-      item.type = data;
-    });
+    if (data === EchartsType.PIE) {
+      selectGridItem.value.w = 600;
+    } else {
+      selectGridItem.value.w = gridLayoutConfig.width;
+    }
+    // selectGridItem.value.config.echartData.series.forEach((item: any) => {
+    //   item.type = data;
+    // });
   }
 };
 
@@ -229,7 +240,7 @@ watch(
   () => store.currentId,
   () => {
     if (!store.currentId) {
-      selectGridItem.value = {};
+      selectGridItem.value = {} as ComponentsInfo;
       return;
     }
     const ret = getCurrentLayout();

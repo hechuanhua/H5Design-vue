@@ -35,6 +35,7 @@ export const TableColumn = [
   },
 ];
 
+// 表格数据
 export const TableData = {
   records: [
     {
@@ -381,6 +382,18 @@ export const TableData = {
   ],
 };
 
+// 饼图数据
+export const echartPie = [
+  { x: "\u65e0\u6548\u7528\u6237", y: 100367488 },
+  { x: "\u8bbe\u5907\u65e0\u6548/\u5378\u8f7d", y: 175658 },
+  { x: "\u63a8\u9001\u73af\u5883\u4e0d\u5339\u914d", y: 22259 },
+  { x: "\u63a5\u53e3\u8bf7\u6c42\u5931\u8d25", y: 15081 },
+  { x: "\u65e0\u76f8\u5173\u6743\u9650", y: 100367488 },
+  { x: "\u5176\u5b83", y: 100367488 },
+  { x: "\u53c2\u6570\u8d85\u9650", y: 100367488 },
+  { x: "\u63a8\u9001\u8d85\u9650", y: 0 },
+];
+
 export const echartOptions = {
   tooltip: {
     trigger: "axis",
@@ -412,6 +425,7 @@ export const echartOptions = {
   ],
 };
 
+// 生命周期维度
 export const layoutData = [
   {
     name: "全局查询容器",
@@ -746,449 +760,1661 @@ export const layoutData = [
   },
 ];
 
-export const echartsLine = {
-  cache_key: null,
-  cached_dttm: null,
-  cache_timeout: 86400,
-  errors: [],
-  form_data: {
-    datasource: "305__table",
-    viz_type: "table",
-    slice_id: 532,
-    url_params: {
-      preselect_filters:
-        '{"456": {"app_key": ["000c84a7fd6187ba43982ea9"], "__time_range": "Last week"}, "457": {"__time_range": "Last week"}, "460": {"__time_range": "Last week"}, "464": {"__time_range": "Last week"}, "466": {"__time_range": "Last week"}, "470": {"__time_range": "Last week"}}',
-    },
-    time_range_endpoints: ["inclusive", "exclusive"],
-    granularity_sqla: "iday",
-    time_grain_sqla: "P1D",
-    time_range: "Last week",
-    query_mode: "aggregate",
-    groupby: ["push_channel"],
-    metrics: [
+// 推送通道维度
+const layoutData1 = [
+  {
+    name: "全局查询容器",
+    type: "COMMONCONTAINER",
+    w: 1600,
+    h: 33,
+    x: 138,
+    y: 0,
+    i: "CXVKxj",
+    icon: "",
+    config: { formKey: "", url: "", method: "GET" },
+    children: [
       {
-        aggregate: "SUM",
-        column: {
-          column_name: "click",
-          description: null,
-          expression: null,
-          filterable: true,
-          groupby: true,
-          id: 2449,
-          is_dttm: false,
-          optionName: "_col_click",
-          python_date_format: null,
-          type: "INTEGER",
-          verbose_name: null,
+        name: "输入框",
+        type: "INPUT",
+        w: 200,
+        h: 32,
+        x: 0,
+        y: 0,
+        i: "fqzRHy",
+        icon: "",
+        config: { key: "app_key", value: "", placeholder: "请输入appkey" },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
+      },
+      {
+        name: "下拉框",
+        type: "SELECT",
+        w: 137,
+        h: 33,
+        x: 213,
+        y: 0,
+        i: "OhFhKA",
+        icon: "",
+        config: {
+          key: "platform",
+          value: [],
+          options: [
+            { label: "android", value: "a" },
+            { label: "ios", value: "i" },
+          ],
+          multiple: true,
+          placeholder: "全部平台",
         },
-        expressionType: "SIMPLE",
-        hasCustomLabel: true,
-        isNew: false,
-        label: "\u70b9\u51fb\u6570",
-        optionName: "metric_dnutxmvtekv_qdzb740p3xm",
-        sqlExpression: null,
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "value", label: "选项", type: "select_edit" },
+          { key: "multiple", label: "是否多选", type: "switch" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
+      },
+      {
+        name: "下拉框",
+        type: "SELECT",
+        w: 151,
+        h: 30,
+        x: 358,
+        y: 0,
+        i: "E4cHEC",
+        icon: "",
+        config: {
+          key: "msg_type",
+          value: [],
+          options: [
+            { label: "通知消息", value: "notify" },
+            { label: "自定义消息", value: "custom" },
+          ],
+          multiple: true,
+          placeholder: "请选择消息类型",
+        },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "value", label: "选项", type: "select_edit" },
+          { key: "multiple", label: "是否多选", type: "switch" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
+      },
+      {
+        name: "下拉框",
+        type: "SELECT",
+        w: 158,
+        h: 31,
+        x: 516,
+        y: 0,
+        i: "fpAjQm",
+        icon: "",
+        config: {
+          key: "push_channel",
+          value: [],
+          options: [
+            { label: "apns", value: "apns" },
+            { label: "asus", value: "asus" },
+            { label: "fcm", value: "fcm" },
+            { label: "honor", value: "honor" },
+            { label: "hw", value: "hw" },
+            { label: "jg", value: "jg" },
+            { label: "asuspns", value: "asuspns" },
+          ],
+          multiple: true,
+          placeholder: "请选择",
+        },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "value", label: "选项", type: "select_edit" },
+          { key: "multiple", label: "是否多选", type: "switch" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
+      },
+      {
+        name: "文本",
+        type: "TEXT",
+        w: 240,
+        h: 31,
+        x: 899,
+        y: 0,
+        i: "v1JfBy",
+        icon: "",
+        config: {
+          value: "下拉控件支持多选，’全部‘仅可单选",
+          size: 14,
+          color: "#f2bd41",
+          lineheight: 32,
+        },
+        column: [
+          { key: "value", label: "文字", type: "input" },
+          { key: "size", label: "字体大小", type: "number" },
+          { key: "color", label: "文字颜色", type: "color" },
+        ],
+        moved: false,
+      },
+      {
+        name: "日期选择器",
+        type: "DATEPICKER",
+        w: 265,
+        h: 32,
+        x: 1329,
+        y: 0,
+        i: "voOQB0",
+        icon: "",
+        config: { value: [], key: "__time_range" },
+        column: [{ key: "key", type: "input", label: "组件key" }],
+        moved: false,
+      },
+      {
+        name: "输入框",
+        type: "INPUT",
+        w: 200,
+        h: 32,
+        x: 685,
+        y: 0,
+        i: "2WpIkc",
+        icon: "",
+        config: { key: "sdk_ver", value: "", placeholder: "请输入sdk版本" },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
       },
     ],
-    all_columns: [],
-    percent_metrics: [],
-    order_by_cols: [],
-    row_limit: 10000,
-    include_time: true,
-    order_desc: true,
-    adhoc_filters: [],
-    table_timestamp_format: "smart_date",
-    color_pn: true,
-    show_cell_bars: true,
-    queryFields: { groupby: "groupby", metrics: "metrics" },
-    color_scheme: "googleCategory20c",
-    label_colors: {
-      "\u53d1\u9001\u6570": "#3366cc",
-      "\u5c55\u793a\u6570": "#dc3912",
-      "\u6709\u6548\u76ee\u6807\u6570": "#ff9900",
-      "\u70b9\u51fb\u6570": "#109618",
-      "\u76ee\u6807\u6570": "#990099",
-      "\u9001\u8fbe\u6570": "#0099c6",
-      "\u4e0b\u53d1\u7387": "#dd4477",
-      "\u5c55\u793a\u7387": "#66aa00",
-      "\u70b9\u51fb\u7387": "#b82e2e",
-      "\u9001\u8fbe\u7387": "#316395",
+    column: [{ key: "formKey", type: "input", label: "表单key" }],
+    moved: false,
+  },
+  {
+    name: "文本",
+    type: "TEXT",
+    w: 198,
+    h: 47,
+    x: 17,
+    y: 33,
+    i: "x2LP8w",
+    icon: "",
+    config: {
+      value: "消息推送数量",
+      size: 20,
+      color: "#000000",
+      lineheight: 32,
     },
-    where: "",
-    having: "",
-    having_filters: [],
-    filters: [],
+    column: [
+      { key: "value", label: "文字", type: "input" },
+      { key: "size", label: "字体大小", type: "number" },
+      { key: "color", label: "文字颜色", type: "color" },
+    ],
+    moved: false,
   },
-  is_cached: false,
-  query:
-    "SELECT push_channel AS push_channel,\n       toStartOfDay(toDateTime(iday)) AS __timestamp,\n       sum(click) AS \"\u70b9\u51fb\u6570\"\nFROM report.push_msg_life_summary_result_day_report_c_view\nWHERE iday >= toDate('2022-12-09')\n  AND iday < toDate('2022-12-16')\nGROUP BY push_channel,\n         toStartOfDay(toDateTime(iday))\nORDER BY \"\u70b9\u51fb\u6570\" DESC\nLIMIT 10000",
-  from_dttm: "2022-12-09T00:00:00",
-  to_dttm: "2022-12-16T00:00:00",
-  status: "success",
-  stacktrace: null,
-  rowcount: 72,
-  data: {
-    records: [
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "jg",
-        "\u70b9\u51fb\u6570": 58858734,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "jg",
-        "\u70b9\u51fb\u6570": 56801152,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "jg",
-        "\u70b9\u51fb\u6570": 54810241,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "jg",
-        "\u70b9\u51fb\u6570": 46473435,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "jg",
-        "\u70b9\u51fb\u6570": 27669119,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "jg",
-        "\u70b9\u51fb\u6570": 18567913,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "apns",
-        "\u70b9\u51fb\u6570": 6040904,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "apns",
-        "\u70b9\u51fb\u6570": 5982239,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "apns",
-        "\u70b9\u51fb\u6570": 5636638,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "apns",
-        "\u70b9\u51fb\u6570": 5190280,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "apns",
-        "\u70b9\u51fb\u6570": 5127521,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "hw",
-        "\u70b9\u51fb\u6570": 2719609,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "hw",
-        "\u70b9\u51fb\u6570": 2409742,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "hw",
-        "\u70b9\u51fb\u6570": 2360536,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "hw",
-        "\u70b9\u51fb\u6570": 2224802,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "apns",
-        "\u70b9\u51fb\u6570": 2175956,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "hw",
-        "\u70b9\u51fb\u6570": 2139965,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "vivo",
-        "\u70b9\u51fb\u6570": 1276700,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "mi",
-        "\u70b9\u51fb\u6570": 1208422,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "mi",
-        "\u70b9\u51fb\u6570": 1005050,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "mi",
-        "\u70b9\u51fb\u6570": 986124,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "mi",
-        "\u70b9\u51fb\u6570": 951564,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "vivo",
-        "\u70b9\u51fb\u6570": 950324,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "vivo",
-        "\u70b9\u51fb\u6570": 939865,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "mi",
-        "\u70b9\u51fb\u6570": 924551,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "vivo",
-        "\u70b9\u51fb\u6570": 900173,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "vivo",
-        "\u70b9\u51fb\u6570": 878359,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "hw",
-        "\u70b9\u51fb\u6570": 851280,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "oppo",
-        "\u70b9\u51fb\u6570": 848497,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "oppo",
-        "\u70b9\u51fb\u6570": 713718,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "mi",
-        "\u70b9\u51fb\u6570": 696633,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "oppo",
-        "\u70b9\u51fb\u6570": 684212,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "oppo",
-        "\u70b9\u51fb\u6570": 666992,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "oppo",
-        "\u70b9\u51fb\u6570": 656516,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "vivo",
-        "\u70b9\u51fb\u6570": 310760,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "fcm",
-        "\u70b9\u51fb\u6570": 277453,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "fcm",
-        "\u70b9\u51fb\u6570": 269853,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "fcm",
-        "\u70b9\u51fb\u6570": 266669,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "fcm",
-        "\u70b9\u51fb\u6570": 248518,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "fcm",
-        "\u70b9\u51fb\u6570": 244508,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "oppo",
-        "\u70b9\u51fb\u6570": 235045,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "fcm",
-        "\u70b9\u51fb\u6570": 129073,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "honor",
-        "\u70b9\u51fb\u6570": 59120,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "honor",
-        "\u70b9\u51fb\u6570": 56886,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "honor",
-        "\u70b9\u51fb\u6570": 56537,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "honor",
-        "\u70b9\u51fb\u6570": 55976,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "honor",
-        "\u70b9\u51fb\u6570": 54077,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "honor",
-        "\u70b9\u51fb\u6570": 16345,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "mz",
-        "\u70b9\u51fb\u6570": 12541,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "mz",
-        "\u70b9\u51fb\u6570": 11004,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "mz",
-        "\u70b9\u51fb\u6570": 10060,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "mz",
-        "\u70b9\u51fb\u6570": 9738,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "mz",
-        "\u70b9\u51fb\u6570": 9735,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "mz",
-        "\u70b9\u51fb\u6570": 3257,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "asuspns",
-        "\u70b9\u51fb\u6570": 875,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "asuspns",
-        "\u70b9\u51fb\u6570": 856,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "asuspns",
-        "\u70b9\u51fb\u6570": 725,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "asuspns",
-        "\u70b9\u51fb\u6570": 303,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "asuspns",
-        "\u70b9\u51fb\u6570": 273,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "asuspns",
-        "\u70b9\u51fb\u6570": 234,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "voip",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "voip",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "asus",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "asus",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-09T00:00:00+08:00",
-        push_channel: "voip",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "asus",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "voip",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-14T00:00:00+08:00",
-        push_channel: "asus",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-13T00:00:00+08:00",
-        push_channel: "asus",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-12T00:00:00+08:00",
-        push_channel: "voip",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-10T00:00:00+08:00",
-        push_channel: "voip",
-        "\u70b9\u51fb\u6570": 0,
-      },
-      {
-        __timestamp: "2022-12-11T00:00:00+08:00",
-        push_channel: "asus",
-        "\u70b9\u51fb\u6570": 0,
+  {
+    name: "文本",
+    type: "TEXT",
+    w: 205,
+    h: 50,
+    x: 14,
+    y: 486,
+    i: "0DJLnl",
+    icon: "",
+    config: {
+      value: "消息转化趋势",
+      size: 20,
+      color: "#000000",
+      lineheight: 32,
+    },
+    column: [
+      { key: "value", label: "文字", type: "input" },
+      { key: "size", label: "字体大小", type: "number" },
+      { key: "color", label: "文字颜色", type: "color" },
+    ],
+    moved: false,
+  },
+  {
+    name: "Tabs",
+    type: "TABS",
+    w: 1597,
+    h: 406,
+    x: 172,
+    y: 80,
+    i: "ZE3rXp",
+    icon: "",
+    config: {
+      value: "1",
+      options: [
+        {
+          label: "有效目标",
+          value: "1",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 241,
+              y: 0,
+              i: "8WJ0ku",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A484%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":484,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":"SUM","column":{"column_name":"effect_target","description":null,"expression":null,"filterable":true,"groupby":true,"id":2444,"is_dttm":false,"optionName":"_col_effect_target","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"有效目标数","optionName":"metric_idu6m6xgb1l_byfyfjnz77f","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "发送数量",
+          value: "2",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 232,
+              y: 0,
+              i: "IGZXpA",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A485%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":485,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":"SUM","column":{"column_name":"success","description":null,"expression":null,"filterable":true,"groupby":true,"id":2446,"is_dttm":false,"optionName":"_col_success","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"发送数","optionName":"metric_luy6bc6lfnq_8rxvh19mnvv","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "送达数量",
+          value: "3",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 207,
+              y: 0,
+              i: "JmVXNj",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A486%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":486,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":"SUM","column":{"column_name":"arrive","description":null,"expression":null,"filterable":true,"groupby":true,"id":2447,"is_dttm":false,"optionName":"_col_arrive","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"送达数","optionName":"metric_36vhbv4orhc_n9weasd4czs","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "展示数量",
+          value: "4",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 259,
+              y: 0,
+              i: "yZAelk",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A487%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":487,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":"SUM","column":{"column_name":"show","description":null,"expression":null,"filterable":true,"groupby":true,"id":2448,"is_dttm":false,"optionName":"_col_show","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"展示数","optionName":"metric_fp884qr695_bteb9yvme67","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "点击数量",
+          value: "5",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 272,
+              y: 0,
+              i: "44X4N2",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A532%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":532,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":"SUM","column":{"column_name":"click","description":null,"expression":null,"filterable":true,"groupby":true,"id":2449,"is_dttm":false,"optionName":"_col_click","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"点击数","optionName":"metric_dnutxmvtekv_qdzb740p3xm","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+      ],
+    },
+    column: [{ key: "value", label: "选项", type: "select_edit" }],
+    moved: false,
+  },
+  {
+    name: "Tabs",
+    type: "TABS",
+    w: 1600,
+    h: 407,
+    x: 173,
+    y: 536,
+    i: "hRxael",
+    icon: "",
+    config: {
+      value: "1",
+      options: [
+        {
+          label: "下发率",
+          value: "1",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 365,
+              y: 0,
+              i: "4Gh7MO",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A489%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":489,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"下发率","optionName":"metric_idu6m6xgb1l_byfyfjnz77f","sqlExpression":"(SUM(target)/sum(effect_target))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "送达率",
+          value: "2",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 264,
+              y: 0,
+              i: "bd3AQt",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A490%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":490,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"送达率","optionName":"metric_luy6bc6lfnq_8rxvh19mnvv","sqlExpression":"(SUM(arrive)/sum(target))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "展示率",
+          value: "3",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 222,
+              y: 0,
+              i: "gNHooy",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A491%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":491,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"展示率","optionName":"metric_rmfcnywdnt_reg2lgncai","sqlExpression":"(SUM(show)/sum(arrive))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "点击率",
+          value: "4",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 281,
+              y: 0,
+              i: "CXgQJ5",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A533%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":533,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["push_channel"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"点击率","optionName":"metric_36vhbv4orhc_n9weasd4czs","sqlExpression":"(SUM(click)/sum(arrive))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+              ],
+              moved: false,
+            },
+          ],
+        },
+      ],
+    },
+    column: [{ key: "value", label: "选项", type: "select_edit" }],
+    moved: false,
+  },
+];
+
+// 推送SDK维度
+const layoutData2 = [
+  {
+    name: "全局查询容器",
+    type: "COMMONCONTAINER",
+    w: 1600,
+    h: 33,
+    x: 138,
+    y: 0,
+    i: "CXVKxj",
+    icon: "",
+    config: { formKey: "", url: "", method: "GET" },
+    children: [
+      {
+        name: "下拉框",
+        type: "SELECT",
+        w: 137,
+        h: 33,
+        x: 208,
+        y: 0,
+        i: "OhFhKA",
+        icon: "",
+        config: {
+          key: "platform",
+          value: [],
+          options: [
+            { label: "android", value: "a" },
+            { label: "ios", value: "i" },
+          ],
+          multiple: true,
+          placeholder: "全部平台",
+        },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "value", label: "选项", type: "select_edit" },
+          { key: "multiple", label: "是否多选", type: "switch" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
+      },
+      {
+        name: "下拉框",
+        type: "SELECT",
+        w: 151,
+        h: 30,
+        x: 352,
+        y: 0,
+        i: "E4cHEC",
+        icon: "",
+        config: {
+          key: "msg_type",
+          value: [],
+          options: [
+            { label: "通知消息", value: "notify" },
+            { label: "自定义消息", value: "custom" },
+          ],
+          multiple: true,
+          placeholder: "请选择消息类型",
+        },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "value", label: "选项", type: "select_edit" },
+          { key: "multiple", label: "是否多选", type: "switch" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
+      },
+      {
+        name: "下拉框",
+        type: "SELECT",
+        w: 158,
+        h: 31,
+        x: 516,
+        y: 0,
+        i: "fpAjQm",
+        icon: "",
+        config: {
+          key: "push_channel",
+          value: [],
+          options: [
+            { label: "apns", value: "apns" },
+            { label: "asus", value: "asus" },
+            { label: "fcm", value: "fcm" },
+            { label: "honor", value: "honor" },
+            { label: "hw", value: "hw" },
+            { label: "jg", value: "jg" },
+            { label: "asuspns", value: "asuspns" },
+          ],
+          multiple: true,
+          placeholder: "请选择通道类型",
+        },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "value", label: "选项", type: "select_edit" },
+          { key: "multiple", label: "是否多选", type: "switch" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+        ],
+        moved: false,
+      },
+      {
+        name: "文本",
+        type: "TEXT",
+        w: 240,
+        h: 31,
+        x: 682,
+        y: 0,
+        i: "v1JfBy",
+        icon: "",
+        config: {
+          value: "下拉控件支持多选，’全部‘仅可单选",
+          size: 14,
+          color: "#f2bd41",
+          lineheight: 32,
+        },
+        column: [
+          { key: "value", label: "文字", type: "input" },
+          { key: "size", label: "字体大小", type: "number" },
+          { key: "color", label: "文字颜色", type: "color" },
+        ],
+        moved: false,
+      },
+      {
+        name: "日期选择器",
+        type: "DATEPICKER",
+        w: 265,
+        h: 32,
+        x: 1329,
+        y: 0,
+        i: "voOQB0",
+        icon: "",
+        config: { value: [], key: "__time_range" },
+        column: [{ key: "key", type: "input", label: "组件key" }],
+        moved: false,
+      },
+      {
+        name: "输入框",
+        type: "INPUT",
+        w: 200,
+        h: 32,
+        x: 0,
+        y: 0,
+        i: "zmb4uM",
+        icon: "",
+        config: {
+          key: "app_key",
+          value: "",
+          placeholder: "请输入appkey",
+          required: true,
+        },
+        column: [
+          { key: "key", type: "input", label: "组件key" },
+          { key: "placeholder", type: "input", label: "提示文案" },
+          { key: "required", type: "switch", label: "是否必须" },
+        ],
+        moved: false,
       },
     ],
-    columns: ["__timestamp", "push_channel", "\u70b9\u51fb\u6570"],
+    column: [{ key: "formKey", type: "input", label: "表单key" }],
+    moved: false,
   },
-};
+  {
+    name: "文本",
+    type: "TEXT",
+    w: 198,
+    h: 47,
+    x: 17,
+    y: 33,
+    i: "x2LP8w",
+    icon: "",
+    config: {
+      value: "消息推送数量",
+      size: 20,
+      color: "#000000",
+      lineheight: 32,
+    },
+    column: [
+      { key: "value", label: "文字", type: "input" },
+      { key: "size", label: "字体大小", type: "number" },
+      { key: "color", label: "文字颜色", type: "color" },
+    ],
+    moved: false,
+  },
+  {
+    name: "文本",
+    type: "TEXT",
+    w: 205,
+    h: 50,
+    x: 14,
+    y: 486,
+    i: "0DJLnl",
+    icon: "",
+    config: {
+      value: "消息转化趋势",
+      size: 20,
+      color: "#000000",
+      lineheight: 32,
+    },
+    column: [
+      { key: "value", label: "文字", type: "input" },
+      { key: "size", label: "字体大小", type: "number" },
+      { key: "color", label: "文字颜色", type: "color" },
+    ],
+    moved: false,
+  },
+  {
+    name: "Tabs",
+    type: "TABS",
+    w: 1597,
+    h: 406,
+    x: 0,
+    y: 80,
+    i: "ZE3rXp",
+    icon: "",
+    config: {
+      value: "1",
+      options: [
+        {
+          label: "有效目标",
+          value: "1",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 241,
+              y: 0,
+              i: "8WJ0ku",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                  is_filter: true,
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A493%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":493,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":"SUM","column":{"column_name":"effect_target","description":null,"expression":null,"filterable":true,"groupby":true,"id":2444,"is_dttm":false,"optionName":"_col_effect_target","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"有效目标数","optionName":"metric_idu6m6xgb1l_byfyfjnz77f","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "发送数量",
+          value: "2",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 232,
+              y: 0,
+              i: "IGZXpA",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                  is_filter: true,
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A494%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":494,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":"SUM","column":{"column_name":"success","description":null,"expression":null,"filterable":true,"groupby":true,"id":2446,"is_dttm":false,"optionName":"_col_success","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"发送数","optionName":"metric_luy6bc6lfnq_8rxvh19mnvv","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "送达数量",
+          value: "3",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 207,
+              y: 0,
+              i: "JmVXNj",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A495%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":495,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":"SUM","column":{"column_name":"arrive","description":null,"expression":null,"filterable":true,"groupby":true,"id":2447,"is_dttm":false,"optionName":"_col_arrive","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"送达数","optionName":"metric_36vhbv4orhc_n9weasd4czs","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "展示数量",
+          value: "4",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 259,
+              y: 0,
+              i: "yZAelk",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A496%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":496,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":"SUM","column":{"column_name":"show","description":null,"expression":null,"filterable":true,"groupby":true,"id":2448,"is_dttm":false,"optionName":"_col_show","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"展示数","optionName":"metric_fp884qr695_bteb9yvme67","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "点击数量",
+          value: "5",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 272,
+              y: 0,
+              i: "44X4N2",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A497%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":497,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":"SUM","column":{"column_name":"click","description":null,"expression":null,"filterable":true,"groupby":true,"id":2449,"is_dttm":false,"optionName":"_col_click","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"点击数","optionName":"metric_dnutxmvtekv_qdzb740p3xm","sqlExpression":null}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+      ],
+    },
+    column: [{ key: "value", label: "选项", type: "select_edit" }],
+    moved: false,
+  },
+  {
+    name: "Tabs",
+    type: "TABS",
+    w: 1600,
+    h: 407,
+    x: 173,
+    y: 536,
+    i: "hRxael",
+    icon: "",
+    config: {
+      value: "1",
+      options: [
+        {
+          label: "下发率",
+          value: "1",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 365,
+              y: 0,
+              i: "4Gh7MO",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A498%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":498,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"下发率","optionName":"metric_idu6m6xgb1l_byfyfjnz77f","sqlExpression":"(SUM(target)/sum(effect_target))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "送达率",
+          value: "2",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 264,
+              y: 0,
+              i: "bd3AQt",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A499%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":499,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"送达率","optionName":"metric_luy6bc6lfnq_8rxvh19mnvv","sqlExpression":"(SUM(arrive)/sum(target))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "展示率",
+          value: "3",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 222,
+              y: 0,
+              i: "gNHooy",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A500%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":500,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"展示率","optionName":"metric_rmfcnywdnt_reg2lgncai","sqlExpression":"(SUM(show)/sum(arrive))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+        {
+          label: "点击率",
+          value: "4",
+          children: [
+            {
+              name: "echarts",
+              type: "ECHARTS",
+              w: 1600,
+              h: 350,
+              x: 281,
+              y: 0,
+              i: "CXgQJ5",
+              icon: "",
+              config: {
+                echartData: {
+                  tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+                  legend: { data: ["点击率", "展示率"] },
+                  xAxis: {
+                    type: "category",
+                    data: ["test1", "test2", "test3"],
+                  },
+                  yAxis: { type: "value" },
+                  series: [
+                    { data: [120, 200, 150], type: "line", name: "点击率" },
+                    { data: [120, 200, 150], type: "line", name: "展示率" },
+                  ],
+                },
+                link: "",
+                api: {
+                  url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A501%7D&dashboard_id=73",
+                  method: "post",
+                },
+                params:
+                  '{"datasource":"305__table","viz_type":"table","slice_id":501,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"点击率","optionName":"metric_36vhbv4orhc_n9weasd4czs","sqlExpression":"(SUM(click)/sum(arrive))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+                echartsType: "line",
+                is_filter: true,
+              },
+              column: [
+                {
+                  key: "api",
+                  type: "api",
+                  label: "API地址",
+                  options: [
+                    { label: "get", value: "get" },
+                    { label: "post", value: "post" },
+                  ],
+                },
+                { key: "params", type: "textarea", label: "初始参数" },
+                {
+                  key: "echartsType",
+                  type: "radio",
+                  label: "图表类型",
+                  options: [
+                    { label: "柱状图", value: "bar" },
+                    { label: "折线图", value: "line" },
+                    { label: "饼图", value: "pie" },
+                  ],
+                },
+                { key: "is_filter", type: "switch", label: "是否增加筛选项" },
+              ],
+              moved: false,
+            },
+          ],
+        },
+      ],
+    },
+    column: [{ key: "value", label: "选项", type: "select_edit" }],
+    moved: false,
+  },
+  {
+    name: "表格",
+    type: "TABLE",
+    w: 1600,
+    h: 528,
+    x: 336,
+    y: 943,
+    i: "W30h3w",
+    icon: "",
+    config: {
+      link: "",
+      api: {
+        url: "http://bds-idp.jpushoa.com/superset/explore_json/?form_data=%7B%22slice_id%22%3A463%7D&dashboard_id=73",
+        method: "post",
+      },
+      params:
+        '{"datasource":"305__table","viz_type":"table","slice_id":463,"url_params":{"preselect_filters":"{\\"456\\": {\\"app_key\\": [\\"000c84a7fd6187ba43982ea9\\"], \\"__time_range\\": \\"Last week\\"}, \\"457\\": {\\"__time_range\\": \\"Last week\\"}, \\"460\\": {\\"__time_range\\": \\"Last week\\"}, \\"464\\": {\\"__time_range\\": \\"Last week\\"}, \\"466\\": {\\"__time_range\\": \\"Last week\\"}, \\"470\\": {\\"__time_range\\": \\"Last week\\"}}"},"time_range_endpoints":["inclusive","exclusive"],"granularity_sqla":"iday","time_grain_sqla":"P1D","time_range":"Last week","query_mode":"aggregate","groupby":["sdk_ver"],"metrics":[{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"发送数","optionName":"metric_0h5g4s5gez8_8eykf9ig2fe","sqlExpression":"SUM(success)"},{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"平均下发率","optionName":"metric_idu6m6xgb1l_byfyfjnz77f","sqlExpression":"(SUM(target)/sum(effect_target))*100"},{"aggregate":"SUM","column":{"column_name":"arrive","description":null,"expression":null,"filterable":true,"groupby":true,"id":2447,"is_dttm":false,"optionName":"_col_arrive","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"送达数","optionName":"metric_j828a2nio3_gt4uv7mkr0p","sqlExpression":null},{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"平均送达率","optionName":"metric_luy6bc6lfnq_8rxvh19mnvv","sqlExpression":"(SUM(arrive)/sum(target))*100"},{"aggregate":"SUM","column":{"column_name":"show","description":null,"expression":null,"filterable":true,"groupby":true,"id":2448,"is_dttm":false,"optionName":"_col_show","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"展示数","optionName":"metric_k82vsnp8ge_81tkwd5a8lu","sqlExpression":null},{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"平均展示率","optionName":"metric_rmfcnywdnt_reg2lgncai","sqlExpression":"(SUM(show)/sum(arrive))*100"},{"aggregate":"SUM","column":{"column_name":"click","description":null,"expression":null,"filterable":true,"groupby":true,"id":2449,"is_dttm":false,"optionName":"_col_click","python_date_format":null,"type":"INTEGER","verbose_name":null},"expressionType":"SIMPLE","hasCustomLabel":true,"isNew":false,"label":"点击数","optionName":"metric_ijg4yz7e85p_yk4bhafdqf","sqlExpression":null},{"aggregate":null,"column":null,"expressionType":"SQL","hasCustomLabel":true,"isNew":false,"label":"平均点击率","optionName":"metric_36vhbv4orhc_n9weasd4czs","sqlExpression":"(SUM(click)/sum(arrive))*100"}],"all_columns":[],"percent_metrics":[],"order_by_cols":[],"row_limit":10000,"include_time":true,"order_desc":true,"adhoc_filters":[],"table_timestamp_format":"smart_date","color_pn":true,"show_cell_bars":true,"queryFields":{"groupby":"groupby","metrics":"metrics"},"color_scheme":"googleCategory20c","label_colors":{"发送数":"#3366cc","展示数":"#dc3912","有效目标数":"#ff9900","点击数":"#109618","目标数":"#990099","送达数":"#0099c6","下发率":"#dd4477","展示率":"#66aa00","点击率":"#b82e2e","送达率":"#316395"},"extra_filters":[{"col":"__time_range","op":"==","val":"Last week"}]}',
+    },
+    column: [
+      { key: "link", type: "input", label: "关联表单key" },
+      {
+        key: "api",
+        type: "api",
+        label: "API地址",
+        options: [
+          { label: "get", value: "get" },
+          { label: "post", value: "post" },
+        ],
+      },
+      { key: "params", type: "textarea", label: "初始参数" },
+    ],
+    moved: false,
+  },
+];

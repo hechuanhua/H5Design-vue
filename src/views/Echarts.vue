@@ -14,13 +14,14 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import request from "@/utils/request";
-import { useEchartsData } from "@/components/GridLayout/useData";
-import { echartsLine } from "@/components/GridLayout/exampleData";
+import { useEchartsPieData } from "@/components/GridLayout/useData";
+import { echartPie } from "@/components/GridLayout/exampleData";
 
 const echartsRef = ref();
-const options = useEchartsData(echartsLine, "line");
+const options = useEchartsPieData({ data: echartPie }, "pie");
 
 onMounted(() => {
+  console.log(options, echartsRef.value, "options");
   const echart = echarts.init(echartsRef.value);
   echart.setOption(options);
   echart.resize();

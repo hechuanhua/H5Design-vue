@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-export const useEchartsData = (res: any, echartsType: string) => {
+export const useEchartsBarData = (res: any, echartsType: string) => {
   const xAxis: any = {
     type: "category",
     data: [],
@@ -48,4 +48,77 @@ export const useTableData = (res: any) => {
     key: item,
     dataIndex: item,
   }));
+};
+
+export const useEchartsTableData = (res: any, echartsType: string) => {
+  const series: any[] = [];
+  const xAxis: any = {
+    type: "category",
+    data: [],
+  };
+  const legend: any = {
+    data: [],
+  };
+  res.data.records.forEach((item: any) => {
+    const x = dayjs(item[res.data.columns[0]]).format("YYYY-MM-DD");
+    if (!xAxis.data.includes(x)) {
+      xAxis.data.push(x);
+    }
+    if (legend.data.includes(item[res.data.columns[1]])) {
+      const ret = series.find((v) => v.name === item[res.data.columns[1]]);
+      ret.data.push(item[res.data.columns[2]]);
+    } else {
+      legend.data.push(item[res.data.columns[1]]);
+      series.push({
+        name: item[res.data.columns[1]],
+        type: echartsType,
+        data: [item[res.data.columns[2]]],
+      });
+    }
+  });
+
+  const echartOptions = {
+    series,
+    xAxis,
+    legend,
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    yAxis: {
+      type: "value",
+    },
+  };
+
+  return echartOptions;
+};
+
+export const useEchartsPieData = (res: any, echartsType: string) => {
+  const series = [
+    {
+      radius: ["50%", "70%"],
+      type: echartsType,
+      data: res.data.map((item: any) => ({
+        name: item.x,
+        value: item.y,
+      })),
+    },
+  ];
+  const legend = {
+    top: "top",
+    left: "center",
+    // type: "scroll",
+  };
+  const echartOptions = {
+    series,
+    legend,
+    tooltip: {
+      trigger: "item",
+      formatter: "{b} : {c} ({d}%)",
+    },
+  };
+
+  return echartOptions;
 };
