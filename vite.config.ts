@@ -16,7 +16,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "http://bds-idp.jpushoa.com",
+        target: "http://127.0.0.1:8080",
         changeOrigin: true,
         rewrite: (path) => {
           const newPath = path.replace(/^\/api/, "");

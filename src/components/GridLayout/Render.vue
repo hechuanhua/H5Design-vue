@@ -32,11 +32,25 @@
       "
     ></Select>
 
-    <div v-if="propsLayoutItem.type === ComponentsType.ECHARTS" class="h100">
+    <div
+      v-if="propsLayoutItem.type === ComponentsType.ECHARTS"
+      :class="['echart h100', { noData: !echartData }]"
+    >
+      <div
+        class="filter tr"
+        v-if="echartData && propsLayoutItem.config.is_filter"
+      >
+        筛选：
+        <Select
+          :options="echartData_series"
+          style="min-width: 200px"
+          @change="echartFilterChange"
+          mode="multiple"
+        ></Select>
+      </div>
       <div
         ref="echartsRef"
         v-if="echartData"
-        class="echart"
         :style="{
           width: propsLayoutItem.w + 'px',
           height: propsLayoutItem.h + 'px',
@@ -47,20 +61,22 @@
 
     <RangePicker
       v-if="propsLayoutItem.type === ComponentsType.DATEPICKER"
-      @change="onRangePickerChange"
+      @change="onChange"
     >
     </RangePicker>
 
-    <Table
-      v-if="propsLayoutItem.type === ComponentsType.TABLE"
-      :columns="tableColumn"
-      :data-source="tableSource"
-      :scroll="{
-        x: 1200,
-        y: propsLayoutItem.y,
-      }"
-    >
-    </Table>
+    <div class="table" v-if="propsLayoutItem.type === ComponentsType.TABLE">
+      <Table
+        :columns="tableColumn"
+        :data-source="tableSource"
+        :scroll="{
+          x: 1600,
+          y: propsLayoutItem.h,
+        }"
+      >
+      </Table>
+      <!-- <Button :type="'primary'" @click="tableExport">导出</Button> -->
+    </div>
 
     <Button
       v-if="propsLayoutItem.type === ComponentsType.BUTTON"
@@ -87,7 +103,6 @@
         v-for="v in propsLayoutItem.config.options"
         :key="v.value"
         :tab="v.label"
-        style="height: 300px"
         :forceRender="true"
       >
         <GridLayout
@@ -133,11 +148,18 @@ import {
   Radio,
 } from "ant-design-vue";
 import * as echarts from "echarts";
-import { ComponentsInfo, ComponentsType, LayoutType } from "@/typings/Common";
+import { ComponentsInfo, ComponentsType, PageType } from "@/typings/Common";
 import GridLayout from "./index.vue";
-import { usePageDataStore } from "@/stores/pageData";
+import { usePreviewDataStore } from "@/stores/previewData";
 import request from "@/utils/request";
-import { useEchartsData, useTableData } from "./useData";
+import { get, post } from "@/api/request";
+import {
+  useEchartsBarData,
+  useTableData,
+  useEchartsTableData,
+  useEchartsPieData,
+} from "./useData";
+import dayjs from "dayjs";
 
 const TabPane = Tabs.TabPane;
 const RadioGroup = Radio.Group;
@@ -159,24 +181,24 @@ const props = defineProps({
     default: false,
   },
   type: {
-    type: String as PropType<LayoutType>,
-    default: LayoutType.EDIT,
+    type: String as PropType<PageType>,
+    default: PageType.EDIT,
   },
 });
 
-const pageStore = usePageDataStore();
+const previewStore = usePreviewDataStore();
 const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
 const tableColumn = ref([]);
 const tableSource = ref<any>();
 const echartsRef = ref();
 const echartData = ref<any>();
+const echartData_series = ref([]);
 const propsLayoutItem = ref(props.layoutItem);
 let echart = null as any;
 
 const getCommonParams = () => {
   const params: any = {};
-  // console.log(props.layoutData, 333, props.layoutItem, pageStore.layoutData);
-  pageStore.layoutData.forEach((item: any) => {
+  previewStore.layoutData.forEach((item: any) => {
     if (item.type === ComponentsType.COMMONCONTAINER && item.children.length) {
       item.children.forEach((v: any) => {
         if (v.config.key) {
@@ -202,30 +224,69 @@ const getCurrentContainerParams = () => {
 
 const onChange = (value: any) => {
   console.log(value, propsLayoutItem.value, 888);
-  if (props.type === LayoutType.EDIT) return;
-  propsLayoutItem.value.config.value = value;
+  if (props.type === PageType.EDIT) return;
+  if (propsLayoutItem.value.type === ComponentsType.DATEPICKER) {
+    propsLayoutItem.value.config.value =
+      dayjs(value[0]).format("YYYY-MM-DD") +
+      "T00:00:00 : " +
+      dayjs(value[1]).format("YYYY-MM-DD") +
+      "T00:00:00";
+  } else {
+    propsLayoutItem.value.config.value = value;
+  }
+
   const parentId = propsLayoutItem.value.parentId;
   if (parentId) {
-    pageStore.params[parentId] = getCurrentContainerParams();
+    previewStore.params[parentId] = getCurrentContainerParams();
   }
 };
 
-const onRangePickerChange = (val: any) => {
-  console.log(val, 333);
+const echartFilterChange = (value: any) => {
+  if (props.type === PageType.EDIT) return;
+  const cloneEchartData = JSON.parse(JSON.stringify(echartData.value));
+  const series = cloneEchartData.series.filter((item: any) =>
+    value.includes(item.name)
+  );
+  if (series.length) {
+    cloneEchartData.series = series;
+  } else {
+    cloneEchartData.series = cloneEchartData.series;
+  }
+  cloneEchartData.legend.data = series.map((item: any) => item.name);
+  cloneEchartData.xAxis = {
+    ...cloneEchartData.xAxis,
+    boundaryGap: true,
+  };
+  setTimeout(() => {
+    echart = echarts.init(echartsRef.value);
+    echart.setOption(cloneEchartData, true);
+    echart.resize();
+  }, 100);
+};
+
+const tableExport = () => {
+  window.open(`${propsLayoutItem.value.config.api.url}&csv=true`);
+  // request({
+  //   url: `/api${propsLayoutItem.value.config.api.url}&csv=true`,
+  //   data: getFormDataParams(),
+  //   method: "GET",
+  // }).then((res: any) => {
+  //   console.log(res, 888);
+  // });
 };
 
 const getFormDataParams = () => {
-  if (!propsLayoutItem.value.config.params) return pageStore.params;
+  if (!propsLayoutItem.value.config.params) return previewStore.params;
   const init_params = JSON.parse(propsLayoutItem.value.config.params);
   const parentId = propsLayoutItem.value.parentId;
   let currentContainerParams = {};
   if (parentId) {
-    currentContainerParams = pageStore.params[parentId];
+    currentContainerParams = previewStore.params[parentId];
   }
   // 合并参数
   const mergeParams = JSON.parse(
     JSON.stringify(
-      Object.assign({}, pageStore.params["common"], currentContainerParams)
+      Object.assign({}, previewStore.params["common"], currentContainerParams)
     )
   );
 
@@ -244,7 +305,7 @@ const getFormDataParams = () => {
   formData.append("form_data", JSON.stringify(init_params));
   console.log(
     mergeParams,
-    pageStore.params,
+    previewStore.params,
     currentContainerParams,
     extra_filters,
     "合并参数"
@@ -259,20 +320,44 @@ const fetchPageData = () => {
     !propsLayoutItem.value.config.api.url
   )
     return;
+  previewStore.loading = true;
   request({
     url: `/api${propsLayoutItem.value.config.api.url}`,
     data: getFormDataParams(),
     method: propsLayoutItem.value.config.api.method,
   }).then((res: any) => {
+    previewStore.loading = false;
     const type = propsLayoutItem.value.type;
     if (type === ComponentsType.ECHARTS) {
-      if (!res.data || (res.data && !res.data.length)) {
+      let options: any = null;
+      if (!res.data) {
         return (echartData.value = null);
       }
-      const options = useEchartsData(
-        res,
-        propsLayoutItem.value.config.echartsType
-      );
+      if (propsLayoutItem.value.config.echartsType === "pie") {
+        options = useEchartsPieData(
+          res,
+          propsLayoutItem.value.config.echartsType
+        );
+      } else {
+        if (res.data.columns) {
+          if (!res.data.columns.length) {
+            return (echartData.value = null);
+          }
+          options = useEchartsTableData(
+            res,
+            propsLayoutItem.value.config.echartsType
+          );
+        } else {
+          options = useEchartsBarData(
+            res,
+            propsLayoutItem.value.config.echartsType
+          );
+        }
+      }
+      echartData_series.value = options.series.map((item: any) => ({
+        label: item.name,
+        value: item.name,
+      }));
       console.log(options, "options");
       initEcharts(options);
     } else if (type === ComponentsType.TABLE) {
@@ -289,41 +374,44 @@ watch(
   }
 );
 
-if (propsLayoutItem.value.config.api?.url) {
-  const parentId = propsLayoutItem.value.parentId;
-  console.log(propsLayoutItem.value.parentId, "api.url", pageStore.params);
-  if (parentId) {
+if (props.type === PageType.PREVIEW) {
+  if (propsLayoutItem.value.config.api?.url) {
+    const parentId = propsLayoutItem.value.parentId;
+    console.log(propsLayoutItem.value.parentId, "api.url", previewStore.params);
+    if (parentId) {
+      watch(
+        () => previewStore.params[parentId],
+        (newVal, oldVal) => {
+          console.log(
+            "previewStore.params.parentId=>watch",
+            previewStore.params.parentId
+          );
+          if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
+          fetchPageData();
+        },
+        {
+          immediate: false,
+        }
+      );
+    }
     watch(
-      () => pageStore.params[parentId],
+      () => previewStore.params["common"],
       (newVal, oldVal) => {
         console.log(
-          "pageStore.params.parentId=>watch",
-          pageStore.params.parentId
+          "previewStore.params.common=>watch",
+          previewStore.params.common
         );
         if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
         fetchPageData();
       },
       {
-        immediate: true,
+        immediate: false,
       }
     );
   }
-  watch(
-    () => pageStore.params["common"],
-    (newVal, oldVal) => {
-      console.log("pageStore.params.common=>watch", pageStore.params.common);
-      if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
-      fetchPageData();
-    },
-    {
-      immediate: true,
-    }
-  );
 }
 
-// }
-
-const initEcharts = (data: any) => {
+const initEcharts = (data?: any) => {
   if (propsLayoutItem.value.type === ComponentsType.ECHARTS) {
     if (!data) return;
     echartData.value = data;
@@ -336,13 +424,20 @@ const initEcharts = (data: any) => {
 };
 
 onMounted(() => {
-  if (props.type === LayoutType.PREVIEW) return;
-  initEcharts(propsLayoutItem.value.config.echartData);
+  if (props.type === PageType.PREVIEW) return;
+  initEcharts();
 });
 </script>
 <style lang="less" scoped>
-.echart {
+.noData {
+  overflow: hidden;
+}
+:deep(.ant-tabs) {
   height: 100%;
-  width: 100%;
+  .ant-tabs-content-holder,
+  .ant-tabs-content,
+  .ant-tabs-tabpane {
+    height: 100%;
+  }
 }
 </style>

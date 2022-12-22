@@ -41,8 +41,7 @@
       <span
         class="formKey"
         v-if="
-          type === LayoutType.EDIT &&
-          item.type === ComponentsType.COMMONCONTAINER
+          type === PageType.EDIT && item.type === ComponentsType.COMMONCONTAINER
         "
       >
         {{ item.config.formKey }}
@@ -50,7 +49,7 @@
       <span
         class="remove"
         @click="removeItem(item)"
-        v-if="type === LayoutType.EDIT"
+        v-if="type === PageType.EDIT"
         >x</span
       >
       <Render
@@ -70,9 +69,9 @@ import {
   ComponentsInfo,
   ComponentsType,
   LayoutDataItem,
-  LayoutType,
+  PageType,
 } from "@/typings/Common";
-import { useLayoutDataStore } from "@/stores/layoutData";
+import { useEditDataStore } from "@/stores/editData";
 import { createUuid } from "@/utils/index";
 import Render from "./Render.vue";
 import { gridLayoutConfig } from "./service";
@@ -87,18 +86,18 @@ const props = defineProps({
     default: false,
   },
   type: {
-    type: String as PropType<LayoutType>,
-    default: LayoutType.EDIT,
+    type: String as PropType<PageType>,
+    default: PageType.EDIT,
   },
 });
 
 const emit = defineEmits(["update:layoutData"]);
-const store = useLayoutDataStore();
+const store = useEditDataStore();
 const propsData = ref(props.layoutData);
 const gridLayoutRef = ref<any>(null);
 const gridItemRef = ref<any[]>([]);
 const dragData = ref({} as ComponentsInfo);
-const isEdit = computed(() => props.type === LayoutType.EDIT);
+const isEdit = computed(() => props.type === PageType.EDIT);
 
 const drop = (event: DragEvent) => {
   event.preventDefault();
@@ -135,7 +134,7 @@ const drop = (event: DragEvent) => {
 };
 
 const selectGridItem = (item: LayoutDataItem) => {
-  if (props.type === LayoutType.PREVIEW) return;
+  if (props.type === PageType.PREVIEW) return;
   console.log(item, "selectGridItem");
   store.currentId = item.i;
 };

@@ -1,4 +1,9 @@
-import { ComponentsInfo, ComponentsType, ColumnType } from "@/typings/Common";
+import {
+  ComponentsInfo,
+  ComponentsType,
+  ColumnType,
+  EchartsType,
+} from "@/typings/Common";
 import { echartOptions } from "./exampleData";
 
 export const gridLayoutConfig = {
@@ -88,6 +93,7 @@ const InputData = {
     key: "",
     value: "",
     placeholder: "请输入",
+    required: false,
   },
 
   column: [
@@ -100,6 +106,11 @@ const InputData = {
       key: "placeholder",
       type: ColumnType.INPUT,
       label: "提示文案",
+    },
+    {
+      key: "required",
+      type: ColumnType.SWITCH,
+      label: "是否必须",
     },
     // {
     //   key: "value",
@@ -309,7 +320,8 @@ const EchartsData = {
       method: "post",
     },
     params: "",
-    echartsType: "bar",
+    echartsType: EchartsType.BAR,
+    is_filter: false,
   },
   column: [
     // {
@@ -344,17 +356,22 @@ const EchartsData = {
       options: [
         {
           label: "柱状图",
-          value: "bar",
+          value: EchartsType.BAR,
         },
         {
           label: "折线图",
-          value: "line",
+          value: EchartsType.LINE,
         },
         {
           label: "饼图",
-          value: "pie",
+          value: EchartsType.PIE,
         },
       ],
+    },
+    {
+      key: "is_filter",
+      type: ColumnType.SWITCH,
+      label: "是否增加筛选项",
     },
   ],
 };
@@ -399,11 +416,11 @@ const TableData = {
     params: "",
   },
   column: [
-    {
-      key: "link",
-      type: ColumnType.INPUT,
-      label: "关联表单key",
-    },
+    // {
+    //   key: "link",
+    //   type: ColumnType.INPUT,
+    //   label: "关联表单key",
+    // },
     {
       key: "api",
       type: ColumnType.API,

@@ -1,23 +1,27 @@
 <template>
   <div class="drag-container" :style="{ width: gridLayoutConfig + 'px' }">
-    <GridLayout
-      v-model:layoutData="layoutData"
-      :type="LayoutType.PREVIEW"
-    ></GridLayout>
+    <Spin :spinning="previewStore.loading">
+      <GridLayout
+        v-model:layoutData="layoutData"
+        :type="PageType.PREVIEW"
+      ></GridLayout>
+    </Spin>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import { Spin } from "ant-design-vue";
 import GridLayout from "@/components/GridLayout/index.vue";
-import { ComponentsType, ComponentsInfo, LayoutType } from "@/typings/Common";
-import { usePageDataStore } from "@/stores/pageData";
+import { ComponentsType, ComponentsInfo, PageType } from "@/typings/Common";
+import { usePreviewDataStore } from "@/stores/previewData";
 import { gridLayoutConfig } from "@/components/GridLayout/service";
 
 const layoutData = ref(
   JSON.parse(localStorage.getItem("layoutData") as string) as ComponentsInfo[]
 );
 
-const pageStore = usePageDataStore();
+const previewStore = usePreviewDataStore();
+
 const initData = () => {
   layoutData.value.forEach((item) => {
     if (
@@ -32,7 +36,7 @@ const initData = () => {
           params[v.config.key] = v.config.value;
         }
       });
-      pageStore.params[item.i] = params;
+      previewStore.params[item.i] = params;
     }
     if (
       item.type === ComponentsType.COMMONCONTAINER &&
@@ -44,17 +48,16 @@ const initData = () => {
         v.parentId = "common";
         if (v.config.key) {
           if (v.type === ComponentsType.DATEPICKER) {
-            params[v.config.key] = v.config.value.toString();
+            v.config.value = v.config.value.toString();
           } else if (v.type === ComponentsType.SELECT) {
             if (v.config.multiple) {
               v.config.value = [];
             }
-          } else {
-            params[v.config.key] = v.config.value;
           }
+          params[v.config.key] = v.config.value;
         }
       });
-      pageStore.params["common"] = params;
+      previewStore.params["common"] = params;
     }
 
     item.parentId = "top";
@@ -62,9 +65,9 @@ const initData = () => {
     if (item.config.key) {
       params[item.config.key] = item.config.value;
     }
-    pageStore.params["top"] = params;
+    previewStore.params["top"] = params;
   });
-  pageStore.layoutData = layoutData.value;
+  previewStore.layoutData = layoutData.value;
 };
 
 initData();
@@ -79,5 +82,11 @@ initData();
   position: relative;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   background: #eee;
+}
+:deep(.ant-spin-nested-loading) {
+  height: 100%;
+  .ant-spin-container {
+    height: 100%;
+  }
 }
 </style>

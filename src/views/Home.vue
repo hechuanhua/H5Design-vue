@@ -4,7 +4,7 @@
     <SideMenu></SideMenu>
     <Setting></Setting>
     <div class="drag-container" :style="{ width: gridLayoutConfig + 'px' }">
-      <GridLayout v-model:layoutData="layoutData"></GridLayout>
+      <GridLayout v-model:layoutData="editStore.layoutData"></GridLayout>
     </div>
   </main>
 </template>
@@ -14,26 +14,25 @@ import Header from "@/components/Header.vue";
 import SideMenu from "@/components/SideMenu.vue";
 import Setting from "@/components/Setting/index.vue";
 import { storeToRefs } from "pinia";
-import { useLayoutDataStore } from "@/stores/layoutData";
+import { useEditDataStore } from "@/stores/editData";
 import GridLayout from "@/components/GridLayout/index.vue";
 import request from "@/utils/request";
 import { gridLayoutConfig } from "@/components/GridLayout/service";
-const store = useLayoutDataStore();
-const { layoutData } = storeToRefs(store) as any;
+import { getTemplateList } from "@/api";
+const editStore = useEditDataStore();
+// const { layoutData } = storeToRefs(editStore) as any;
 
 watch(
-  () => layoutData.value,
+  () => editStore.layoutData,
   () => {
-    console.log(
-      JSON.parse(JSON.stringify(layoutData.value)),
-      "localStorage=>setItem"
-    );
-    localStorage.setItem("layoutData", JSON.stringify(layoutData.value));
+    localStorage.setItem("layoutData", JSON.stringify(editStore.layoutData));
   },
   { deep: true }
 );
 
-//
+getTemplateList().then((res) => {
+  editStore.templateData = res;
+});
 
 const test = () => {
   const formData = new FormData();

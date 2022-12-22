@@ -42,9 +42,6 @@ export type ComponentsInfo = {
     [key: string]: any;
   };
   children?: ComponentsInfo[];
-  formConfig?: {
-    [key: string]: any;
-  };
 };
 
 export type LayoutDataItem = {
@@ -55,7 +52,21 @@ export type LayoutDataItem = {
   i: string;
 };
 
-export enum LayoutType {
+export enum PageType {
   EDIT = "edit",
   PREVIEW = "preview",
 }
+
+export enum EchartsType {
+  BAR = "bar",
+  LINE = "line",
+  PIE = "pie",
+}
+
+export type TemplateData = {
+  tid: string;
+  title: string;
+  layout_data: string;
+  create_date: string;
+  update_date: string;
+};
