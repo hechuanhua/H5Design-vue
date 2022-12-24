@@ -313,7 +313,7 @@ const EchartsData = {
   i: "",
   icon: "",
   config: {
-    echartData: echartOptions,
+    echartData: null,
     link: "",
     api: {
       url: "",

@@ -136,7 +136,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch, PropType } from "vue";
+import { ref, onMounted, watch, PropType, inject } from "vue";
 import {
   Input,
   Select,
@@ -150,9 +150,7 @@ import {
 import * as echarts from "echarts";
 import { ComponentsInfo, ComponentsType, PageType } from "@/typings/Common";
 import GridLayout from "./index.vue";
-import { usePreviewDataStore } from "@/stores/previewData";
 import request from "@/utils/request";
-import { get, post } from "@/api/request";
 import {
   useEchartsBarData,
   useTableData,
@@ -186,7 +184,6 @@ const props = defineProps({
   },
 });
 
-const previewStore = usePreviewDataStore();
 const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
 const tableColumn = ref([]);
 const tableSource = ref<any>();
@@ -194,22 +191,11 @@ const echartsRef = ref();
 const echartData = ref<any>();
 const echartData_series = ref([]);
 const propsLayoutItem = ref(props.layoutItem);
-let echart = null as any;
 
-const getCommonParams = () => {
-  const params: any = {};
-  previewStore.layoutData.forEach((item: any) => {
-    if (item.type === ComponentsType.COMMONCONTAINER && item.children.length) {
-      item.children.forEach((v: any) => {
-        if (v.config.key) {
-          params[v.config.key] = v.config.value;
-        }
-      });
-    }
-  });
-  console.log(params, "getCommonParams");
-  return params;
-};
+const globalParams: any = inject("globalParams");
+const globalLoading: any = inject("globalLoading");
+
+let echart = null as any;
 
 const getCurrentContainerParams = () => {
   const params: any = {};
@@ -237,7 +223,7 @@ const onChange = (value: any) => {
 
   const parentId = propsLayoutItem.value.parentId;
   if (parentId) {
-    previewStore.params[parentId] = getCurrentContainerParams();
+    globalParams.value[parentId] = getCurrentContainerParams();
   }
 };
 
@@ -276,17 +262,17 @@ const tableExport = () => {
 };
 
 const getFormDataParams = () => {
-  if (!propsLayoutItem.value.config.params) return previewStore.params;
+  if (!propsLayoutItem.value.config.params) return globalParams.value;
   const init_params = JSON.parse(propsLayoutItem.value.config.params);
   const parentId = propsLayoutItem.value.parentId;
   let currentContainerParams = {};
   if (parentId) {
-    currentContainerParams = previewStore.params[parentId];
+    currentContainerParams = globalParams.value[parentId];
   }
   // 合并参数
   const mergeParams = JSON.parse(
     JSON.stringify(
-      Object.assign({}, previewStore.params["common"], currentContainerParams)
+      Object.assign({}, globalParams.value["common"], currentContainerParams)
     )
   );
 
@@ -305,7 +291,7 @@ const getFormDataParams = () => {
   formData.append("form_data", JSON.stringify(init_params));
   console.log(
     mergeParams,
-    previewStore.params,
+    globalParams.value,
     currentContainerParams,
     extra_filters,
     "合并参数"
@@ -320,13 +306,13 @@ const fetchPageData = () => {
     !propsLayoutItem.value.config.api.url
   )
     return;
-  previewStore.loading = true;
+  globalLoading.value = true;
   request({
     url: `/api${propsLayoutItem.value.config.api.url}`,
     data: getFormDataParams(),
     method: propsLayoutItem.value.config.api.method,
   }).then((res: any) => {
-    previewStore.loading = false;
+    globalLoading.value = false;
     const type = propsLayoutItem.value.type;
     if (type === ComponentsType.ECHARTS) {
       let options: any = null;
@@ -377,14 +363,14 @@ watch(
 if (props.type === PageType.PREVIEW) {
   if (propsLayoutItem.value.config.api?.url) {
     const parentId = propsLayoutItem.value.parentId;
-    console.log(propsLayoutItem.value.parentId, "api.url", previewStore.params);
+    console.log(propsLayoutItem.value.parentId, "api.url", globalParams.value);
     if (parentId) {
       watch(
-        () => previewStore.params[parentId],
+        () => globalParams.value[parentId],
         (newVal, oldVal) => {
           console.log(
-            "previewStore.params.parentId=>watch",
-            previewStore.params.parentId
+            "globalParams.parentId=>watch",
+            globalParams.value[parentId]
           );
           if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
           fetchPageData();
@@ -395,12 +381,9 @@ if (props.type === PageType.PREVIEW) {
       );
     }
     watch(
-      () => previewStore.params["common"],
+      () => globalParams.value["common"],
       (newVal, oldVal) => {
-        console.log(
-          "previewStore.params.common=>watch",
-          previewStore.params.common
-        );
+        console.log("globalParams.common=>watch", globalParams.value["common"]);
         if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
         fetchPageData();
       },

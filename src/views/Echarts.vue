@@ -19,7 +19,6 @@ import { echartPie } from "@/components/GridLayout/exampleData";
 
 const echartsRef = ref();
 const options = useEchartsPieData({ data: echartPie }, "pie");
-
 onMounted(() => {
   console.log(options, echartsRef.value, "options");
   const echart = echarts.init(echartsRef.value);
