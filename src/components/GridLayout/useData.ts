@@ -42,13 +42,6 @@ export const useEchartsBarData = (res: any, echartsType: string) => {
   return echartOptions;
 };
 
-export const useTableData = (res: any) => {
-  return res.data.columns.map((item: any) => ({
-    title: item,
-    key: item,
-    dataIndex: item,
-  }));
-};
 
 export const useEchartsTableData = (res: any, echartsType: string) => {
   const series: any[] = [];
@@ -64,15 +57,19 @@ export const useEchartsTableData = (res: any, echartsType: string) => {
     if (!xAxis.data.includes(x)) {
       xAxis.data.push(x);
     }
+    let data = item[res.data.columns[2]]
+    if(/^\d+\.\d{3}/.test(data)){
+      data = data.toFixed(2)
+    }
     if (legend.data.includes(item[res.data.columns[1]])) {
       const ret = series.find((v) => v.name === item[res.data.columns[1]]);
-      ret.data.push(item[res.data.columns[2]]);
+      ret.data.push(data);
     } else {
       legend.data.push(item[res.data.columns[1]]);
       series.push({
         name: item[res.data.columns[1]],
         type: echartsType,
-        data: [item[res.data.columns[2]]],
+        data: [data],
       });
     }
   });

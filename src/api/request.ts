@@ -18,6 +18,7 @@ type Response<T> = {
 };
 
 const previewStore = usePreviewDataStore();
+
 const get = <T>(url: string, params?: any) => {
   return new Promise<T>((resolve, reject) => {
     fetch(
@@ -26,6 +27,7 @@ const get = <T>(url: string, params?: any) => {
       }`,
       {
         method: "GET",
+        credentials:'include',
       }
     )
       .then((response) => response.json())
@@ -46,25 +48,36 @@ const get = <T>(url: string, params?: any) => {
 };
 
 const post = (url: string, params: any) => {
+  const isFormData = params.formData
+  let headers:any = {
+    "Content-Type": "application/json;charset=utf-8",
+  }
+  if(isFormData){
+    headers = {}
+  }
   return new Promise((resolve, reject) => {
-    fetch(`${url.indexOf("http") > -1 ? url : config.api + url}`, {
+    fetch(`${url.indexOf("http") <= -1 ? url : config.api + url}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(params),
+      headers: headers,
+      credentials:'include',
+      body: isFormData?params.data:JSON.stringify(params),
     })
       .then((response) => {
         return response.json();
       })
       .then((res) => {
-        if (res.code === 200) {
-          resolve(res.data);
+        if(isFormData){
+          resolve(res);
         } else {
-          message.error(res.message, 3);
-          reject(res);
-          previewStore.loading = false;
+          if (res.code === 200) {
+            resolve(res.data);
+          } else {
+            message.error(res.message, 3);
+            reject(res);
+            previewStore.loading = false;
+          }
         }
+        
       })
       .catch((e) => {
         console.log("error");

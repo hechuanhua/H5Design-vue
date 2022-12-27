@@ -4,9 +4,7 @@ import {
 	createApp,
 	getCurrentInstance,
 } from 'vue';
-import Preview from '@/views/Preview.vue';
-import styles from 'ant-design-vue/dist/antd.css?inline';
-import commonStyles from '@/assets/styles/common.less?inline';
+
 const nearestElement = el => {
 	while (el?.nodeType !== 1 /* ELEMENT */) el = el.parentElement;
 	return el;
@@ -45,10 +43,3 @@ export const defineCustomElement = component =>
 			return () => h(component);
 		},
 	});
-
-export const GraphComponent = defineCustomElement({
-	...Preview,
-	styles: Preview.styles.concat([commonStyles, styles]),
-});
-
-window.customElements.define('vue-layout', GraphComponent);
