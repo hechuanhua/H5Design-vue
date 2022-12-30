@@ -4,7 +4,6 @@ import {
   ColumnType,
   EchartsType,
 } from "@/typings/Common";
-import { echartOptions } from "./exampleData";
 
 export const gridLayoutConfig = {
   width: 1600,

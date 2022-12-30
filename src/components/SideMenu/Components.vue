@@ -13,9 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
 import { ComponentsInfo } from "@/typings/Common";
-import { componentsList } from "@/components/GridLayout/service";
+import { componentsList } from "@/components/Core/service";
 
 const dragstart = (event: DragEvent, data: ComponentsInfo) => {
   if (event.dataTransfer) {

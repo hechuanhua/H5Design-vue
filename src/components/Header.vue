@@ -10,7 +10,7 @@
   </header>
   <Modal
     :visible="saveVisible"
-    :title="'确定保存'"
+    :title="'确定保存？'"
     @cancel="saveVisible = false"
     @ok="saveSubmit"
   >
@@ -28,20 +28,22 @@ import { useEditDataStore } from "@/stores/editData";
 import { saveTemplate, getTemplateList } from "@/api";
 
 const FormItem = Form.Item;
-const store = useEditDataStore();
+const editStore = useEditDataStore();
 const saveVisible = ref(false);
 const pageTitle = ref("");
 
 const clearData = () => {
-  store.$patch({
+  editStore.$patch({
     layoutData: [],
     currentId: "",
+    templateId: "",
   });
 };
 const preview = () => {
-  window.open("/preview");
+  window.open("./#/preview");
 };
 const saveSubmit = () => {
+  if (!pageTitle.value) return message.error("请填写模板标题");
   saveVisible.value = false;
   saveTemplate({
     title: pageTitle.value,
@@ -50,7 +52,7 @@ const saveSubmit = () => {
     .then(() => {
       message.success("保存成功");
       getTemplateList().then((res) => {
-        store.templateData = res;
+        editStore.templateData = res;
       });
     })
     .catch((res) => {

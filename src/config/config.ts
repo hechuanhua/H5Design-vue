@@ -1,7 +1,7 @@
-const baseUrl = `http://127.0.0.1:7001`;
+const baseUrl = import.meta.env.VITE_BASE_URL;
 const config = {
   baseUrl,
-  api: `${baseUrl}`,
+  api: `${baseUrl}/api`,
 };
 
 export default config;

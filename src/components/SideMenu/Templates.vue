@@ -1,6 +1,9 @@
 <template>
   <div class="template-list">
-    <div class="item" v-for="item in store.templateData">
+    <div
+      :class="['item', { active: editStore.templateId === item.tid }]"
+      v-for="item in editStore.templateData"
+    >
       <div class="title" :title="item.title">{{ item.title }}</div>
       <div class="use" @click="use(item)" :title="item.title">立即使用</div>
     </div>
@@ -8,15 +11,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
 import { TemplateData } from "@/typings/Common";
 import { useEditDataStore } from "@/stores/editData";
 
-const store = useEditDataStore();
+const editStore = useEditDataStore();
 
 const use = (data: TemplateData) => {
-  store.layoutData = JSON.parse(data.layout_data);
-  store.currentId = "";
+  editStore.layoutData = JSON.parse(data.layout_data);
+  editStore.currentId = "";
+  editStore.templateId = data.tid;
 };
 </script>
 <style lang="less" scoped>
@@ -25,6 +28,10 @@ const use = (data: TemplateData) => {
   .item {
     padding: 15px 0;
     position: relative;
+    &.active {
+      background-color: #e6f7ff;
+      color: #1890ff;
+    }
     .title {
       white-space: nowrap;
       overflow: hidden;

@@ -57,8 +57,8 @@ const ok = () => {
 
 const initMonaco = () => {
   console.log("initMonaco");
-  self.MonacoEnvironment = {
-    getWorker(_, label) {
+  (self as any).MonacoEnvironment = {
+    getWorker(_: any, label: string) {
       if (label === "json") {
         return new jsonWorker();
       }

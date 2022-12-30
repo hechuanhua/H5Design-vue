@@ -1,3 +1,5 @@
 interface ImportMetaEnv {
-  readonly APP_BASE_API: string;
+  readonly VITE_BASE_URL: string;
+  readonly VITE_ENV: string;
+  readonly VITE_MODE: string;
 }

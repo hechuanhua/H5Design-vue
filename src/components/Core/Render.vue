@@ -62,10 +62,15 @@
     <RangePicker
       v-if="propsLayoutItem.type === ComponentsType.DATEPICKER"
       @change="onChange"
-    >
-    </RangePicker>
+      :locale="locale"
+    ></RangePicker>
 
     <div class="table" v-if="propsLayoutItem.type === ComponentsType.TABLE">
+      <div class="tr" style="padding-right: 20px">
+        <Button :type="'primary'" @click="handleExport" v-if="tableSource"
+          >导出</Button
+        >
+      </div>
       <Table
         :columns="tableColumn"
         :data-source="tableSource"
@@ -73,9 +78,7 @@
           x: 1600,
           y: propsLayoutItem.h,
         }"
-      >
-      </Table>
-      <!-- <Button :type="'primary'" @click="tableExport">导出</Button> -->
+      ></Table>
     </div>
 
     <Button
@@ -91,8 +94,7 @@
       :optionType="propsLayoutItem.config.type ? 'default' : 'button'"
       v-model:value="propsLayoutItem.config.value"
       @change="onChange(propsLayoutItem.config.value)"
-    >
-    </RadioGroup>
+    ></RadioGroup>
 
     <Tabs
       v-if="propsLayoutItem.type === ComponentsType.TABS"
@@ -136,7 +138,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch, PropType, inject } from "vue";
+import { ref, onMounted, watch, PropType } from "vue";
 import {
   Input,
   Select,
@@ -150,14 +152,16 @@ import {
 import * as echarts from "echarts";
 import { ComponentsInfo, ComponentsType, PageType } from "@/typings/Common";
 import GridLayout from "./index.vue";
-import request from "@/utils/request";
+import { usePreviewDataStore } from "@/stores/previewData";
+import { post } from "@/api/request";
 import {
   useEchartsBarData,
-  useTableData,
   useEchartsTableData,
   useEchartsPieData,
 } from "./useData";
 import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import locale from "ant-design-vue/es/date-picker/locale/zh_CN";
 
 const TabPane = Tabs.TabPane;
 const RadioGroup = Radio.Group;
@@ -184,6 +188,7 @@ const props = defineProps({
   },
 });
 
+const previewStore = usePreviewDataStore();
 const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
 const tableColumn = ref([]);
 const tableSource = ref<any>();
@@ -191,9 +196,6 @@ const echartsRef = ref();
 const echartData = ref<any>();
 const echartData_series = ref([]);
 const propsLayoutItem = ref(props.layoutItem);
-
-const globalParams: any = inject("globalParams");
-const globalLoading: any = inject("globalLoading");
 
 let echart = null as any;
 
@@ -204,7 +206,6 @@ const getCurrentContainerParams = () => {
       params[item.config.key] = item.config.value;
     }
   });
-  console.log(params, "getCurrentContainerParams");
   return params;
 };
 
@@ -223,7 +224,7 @@ const onChange = (value: any) => {
 
   const parentId = propsLayoutItem.value.parentId;
   if (parentId) {
-    globalParams.value[parentId] = getCurrentContainerParams();
+    previewStore.params[parentId] = getCurrentContainerParams();
   }
 };
 
@@ -250,29 +251,72 @@ const echartFilterChange = (value: any) => {
   }, 100);
 };
 
-const tableExport = () => {
-  window.open(`${propsLayoutItem.value.config.api.url}&csv=true`);
-  // request({
-  //   url: `/api${propsLayoutItem.value.config.api.url}&csv=true`,
-  //   data: getFormDataParams(),
-  //   method: "GET",
-  // }).then((res: any) => {
-  //   console.log(res, 888);
-  // });
+const downCsv = (data: any) => {
+  let csvString = "";
+  Object.keys(data[0]).forEach((value: any) => {
+    csvString += value + ",";
+  });
+  csvString += "\r\n";
+  data.forEach((item: any) => {
+    (Object as any).values(item).forEach((value: any) => {
+      csvString += value + ",";
+    });
+    csvString += "\r\n";
+  });
+  csvString =
+    "data:application/csv;charset=utf-8,\ufeff" + encodeURIComponent(csvString);
+  const a = document.createElement("a");
+  a.setAttribute("href", csvString);
+  a.setAttribute("download", `${Date.now()}.csv`);
+  a.style.display = "none";
+  a.click();
+  a.remove();
+};
+
+const handleExport = () => {
+  if (props.type === PageType.EDIT) return;
+  if (!tableSource.value || (tableSource.value && !tableSource.value.length))
+    return;
+  downCsv(tableSource.value);
+  // let fileName = '';
+  // fetch(`${config.api}/exportCsv`, {
+  // 	method: 'POST',
+  // 	body: JSON.stringify(tableSource),
+  // })
+  // 	.then(res => {
+  // 		const fileNameEncode = res.headers.get('Content-Disposition')!;
+  // 		fileName = decodeURIComponent(fileNameEncode);
+  // 		return res.blob();
+  // 	})
+  // 	.then(res => {
+  // 		console.log(res, 'res');
+  // 		const a = document.createElement('a');
+  // 		const blob = new Blob([res], {
+  // 			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; application/octet-stream',
+  // 		});
+  // 		const fileUrl = window.URL.createObjectURL(blob);
+  // 		a.href = fileUrl;
+  // 		console.log('url', fileUrl);
+
+  // 		a.setAttribute('download', fileName);
+  // 		a.style.display = 'none';
+  // 		a.click();
+  // 		a.remove();
+  // 	});
 };
 
 const getFormDataParams = () => {
-  if (!propsLayoutItem.value.config.params) return globalParams.value;
+  if (!propsLayoutItem.value.config.params) return previewStore.params;
   const init_params = JSON.parse(propsLayoutItem.value.config.params);
   const parentId = propsLayoutItem.value.parentId;
   let currentContainerParams = {};
   if (parentId) {
-    currentContainerParams = globalParams.value[parentId];
+    currentContainerParams = previewStore.params[parentId];
   }
   // 合并参数
   const mergeParams = JSON.parse(
     JSON.stringify(
-      Object.assign({}, globalParams.value["common"], currentContainerParams)
+      Object.assign({}, previewStore.params["common"], currentContainerParams)
     )
   );
 
@@ -289,13 +333,6 @@ const getFormDataParams = () => {
 
   const formData = new FormData();
   formData.append("form_data", JSON.stringify(init_params));
-  console.log(
-    mergeParams,
-    globalParams.value,
-    currentContainerParams,
-    extra_filters,
-    "合并参数"
-  );
   return formData;
 };
 
@@ -306,51 +343,101 @@ const fetchPageData = () => {
     !propsLayoutItem.value.config.api.url
   )
     return;
-  globalLoading.value = true;
-  request({
-    url: `/api${propsLayoutItem.value.config.api.url}`,
-    data: getFormDataParams(),
-    method: propsLayoutItem.value.config.api.method,
-  }).then((res: any) => {
-    globalLoading.value = false;
-    const type = propsLayoutItem.value.type;
-    if (type === ComponentsType.ECHARTS) {
-      let options: any = null;
-      if (!res.data) {
-        return (echartData.value = null);
-      }
-      if (propsLayoutItem.value.config.echartsType === "pie") {
-        options = useEchartsPieData(
-          res,
-          propsLayoutItem.value.config.echartsType
-        );
-      } else {
-        if (res.data.columns) {
-          if (!res.data.columns.length) {
-            return (echartData.value = null);
-          }
-          options = useEchartsTableData(
+  previewStore.loading = true;
+  if (propsLayoutItem.value.config.api.method === "post") {
+    post(`/proxy?${propsLayoutItem.value.config.api.url}`, {
+      formData: true,
+      data: getFormDataParams(),
+    }).then((res: any) => {
+      previewStore.loading = false;
+      const type = propsLayoutItem.value.type;
+      if (type === ComponentsType.ECHARTS) {
+        let options: any = null;
+        if (!res.data) {
+          return (echartData.value = null);
+        }
+        if (propsLayoutItem.value.config.echartsType === "pie") {
+          options = useEchartsPieData(
             res,
             propsLayoutItem.value.config.echartsType
           );
         } else {
-          options = useEchartsBarData(
-            res,
-            propsLayoutItem.value.config.echartsType
-          );
+          if (res.data.columns) {
+            if (!res.data.columns.length) {
+              return (echartData.value = null);
+            }
+            options = useEchartsTableData(
+              res,
+              propsLayoutItem.value.config.echartsType
+            );
+          } else {
+            options = useEchartsBarData(
+              res,
+              propsLayoutItem.value.config.echartsType
+            );
+          }
         }
+        echartData_series.value = options.series.map((item: any) => ({
+          label: item.name,
+          value: item.name,
+        }));
+        initEcharts(options);
+      } else if (type === ComponentsType.TABLE) {
+        tableColumn.value = res.data.columns.map((item: any) => ({
+          title: item,
+          key: item,
+          dataIndex: item,
+        }));
+
+        // 保留2位小数
+        res.data.records.forEach((item: any) => {
+          Object.keys(item).forEach((v) => {
+            let data = item[v];
+            if (/^\d+\.\d{3}/.test(data)) {
+              item[v] = data.toFixed(2);
+            }
+          });
+        });
+
+        tableSource.value = res.data.records;
       }
-      echartData_series.value = options.series.map((item: any) => ({
-        label: item.name,
-        value: item.name,
-      }));
-      console.log(options, "options");
-      initEcharts(options);
-    } else if (type === ComponentsType.TABLE) {
-      tableColumn.value = useTableData(res);
-      tableSource.value = res.data.records;
-    }
-  });
+    });
+  }
+  // request({
+  // 	url: `/proxy?${propsLayoutItem.value.config.api.url}`,
+  // 	data: getFormDataParams(),
+  // 	method: propsLayoutItem.value.config.api.method,
+  // }).then((res: any) => {
+  // 	previewStore.loading = false;
+  // 	const type = propsLayoutItem.value.type;
+  // 	if (type === ComponentsType.ECHARTS) {
+  // 		let options: any = null;
+  // 		if (!res.data) {
+  // 			return (echartData.value = null);
+  // 		}
+  // 		if (propsLayoutItem.value.config.echartsType === 'pie') {
+  // 			options = useEchartsPieData(res, propsLayoutItem.value.config.echartsType);
+  // 		} else {
+  // 			if (res.data.columns) {
+  // 				if (!res.data.columns.length) {
+  // 					return (echartData.value = null);
+  // 				}
+  // 				options = useEchartsTableData(res, propsLayoutItem.value.config.echartsType);
+  // 			} else {
+  // 				options = useEchartsBarData(res, propsLayoutItem.value.config.echartsType);
+  // 			}
+  // 		}
+  // 		echartData_series.value = options.series.map((item: any) => ({
+  // 			label: item.name,
+  // 			value: item.name,
+  // 		}));
+  // 		console.log(options, 'options');
+  // 		initEcharts(options);
+  // 	} else if (type === ComponentsType.TABLE) {
+  // 		tableColumn.value = useTableData(res);
+  // 		tableSource.value = res.data.records;
+  // 	}
+  // });
 };
 
 watch(
@@ -363,15 +450,10 @@ watch(
 if (props.type === PageType.PREVIEW) {
   if (propsLayoutItem.value.config.api?.url) {
     const parentId = propsLayoutItem.value.parentId;
-    console.log(propsLayoutItem.value.parentId, "api.url", globalParams.value);
     if (parentId) {
       watch(
-        () => globalParams.value[parentId],
+        () => previewStore.params[parentId],
         (newVal, oldVal) => {
-          console.log(
-            "globalParams.parentId=>watch",
-            globalParams.value[parentId]
-          );
           if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
           fetchPageData();
         },
@@ -381,9 +463,8 @@ if (props.type === PageType.PREVIEW) {
       );
     }
     watch(
-      () => globalParams.value["common"],
+      () => previewStore.params["common"],
       (newVal, oldVal) => {
-        console.log("globalParams.common=>watch", globalParams.value["common"]);
         if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
         fetchPageData();
       },
@@ -417,6 +498,7 @@ onMounted(() => {
 }
 :deep(.ant-tabs) {
   height: 100%;
+  overflow: inherit;
   .ant-tabs-content-holder,
   .ant-tabs-content,
   .ant-tabs-tabpane {

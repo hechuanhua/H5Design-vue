@@ -9,7 +9,8 @@ export const saveTemplate = (params: { title: string; layout_data: string }) =>
 export const getTemplateList = () => get<TemplateData[]>(`/getTemplateList`);
 
 // 根据Tid获取模块数据
-export const getLayoutByTid = (params: any) => get(`/getLayoutByTid`, params);
+export const getTemplateByTid = (tid: string) =>
+  get(`/getTemplateByTid?tid=${tid}`);
 
 // 删除模板
 export const deleteTemplate = (params: any) => post(`/deleteTemplate`, params);

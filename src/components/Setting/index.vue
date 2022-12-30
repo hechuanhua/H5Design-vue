@@ -26,8 +26,7 @@
                 :options="item.options"
                 :style="{ width: '100%' }"
                 placeholder="请选择"
-              >
-              </Select>
+              ></Select>
             </div>
             <div
               :class="`${item.type}-setting`"
@@ -41,16 +40,19 @@
                     type="link"
                     @click="deleteOptionItem(index)"
                     v-if="selectGridItem.config.options.length > 1"
-                    ><MinusCircleOutlined
-                  /></Button>
+                  >
+                    <MinusCircleOutlined />
+                  </Button>
                 </div>
               </FormItem>
               <Button
                 type="link"
                 @click="addOptionItem"
                 v-if="selectGridItem.config.options.length"
-                ><PlusOutlined></PlusOutlined>新增选项</Button
               >
+                <PlusOutlined></PlusOutlined>
+                新增选项
+              </Button>
             </div>
 
             <div
@@ -72,16 +74,18 @@
               :class="`${item.type}-setting`"
               v-if="item.type === ColumnType.TEXTAREA"
             >
-              <Textarea v-model:value="selectGridItem.config[item.key]">
-              </Textarea>
+              <Textarea
+                v-model:value="selectGridItem.config[item.key]"
+              ></Textarea>
             </div>
 
             <div
               :class="`${item.type}-setting`"
               v-if="item.type === ColumnType.NUMBER"
             >
-              <InputNumber v-model:value="selectGridItem.config[item.key]">
-              </InputNumber>
+              <InputNumber
+                v-model:value="selectGridItem.config[item.key]"
+              ></InputNumber>
             </div>
 
             <div
@@ -107,16 +111,16 @@
                 :options="item.options"
                 optionType="button"
                 @change="onRadioChange(selectGridItem.config[item.key])"
-              >
-              </RadioGroup>
+              ></RadioGroup>
             </div>
 
             <div
               :class="`${item.type}-setting`"
               v-if="item.type === ColumnType.SWITCH"
             >
-              <Switch v-model:checked="selectGridItem.config[item.key]">
-              </Switch>
+              <Switch
+                v-model:checked="selectGridItem.config[item.key]"
+              ></Switch>
             </div>
           </FormItem>
         </Form>
@@ -152,7 +156,7 @@ import {
 } from "@/typings/Common";
 import { useEditDataStore } from "@/stores/editData";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons-vue";
-import { gridLayoutConfig } from "@/components/GridLayout/service";
+import { gridLayoutConfig } from "@/components/Core/service";
 import { Sketch } from "@ckpack/vue-color";
 
 const TabPane = Tabs.TabPane;

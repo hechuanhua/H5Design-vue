@@ -15,15 +15,15 @@
       <MenuItem :key="1">组件库</MenuItem>
       <MenuItem :key="2">模板库</MenuItem>
     </Menu>
-    <Library v-if="selectedKeys[0] === 1"></Library>
-    <Template v-if="selectedKeys[0] === 2"></Template>
+    <Components v-if="selectedKeys[0] === 1"></Components>
+    <Templates v-if="selectedKeys[0] === 2"></Templates>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
 import { Menu } from "ant-design-vue";
-import Library from "@/components/Library/index.vue";
-import Template from "@/components/Template.vue";
+import Components from "@/components/SideMenu/Components.vue";
+import Templates from "@/components/SideMenu/Templates.vue";
 const MenuItem = Menu.Item;
 const selectedKeys = ref([1]);
 </script>
