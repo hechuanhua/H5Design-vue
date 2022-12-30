@@ -1,18 +1,17 @@
 <template>
 	<div class="drag-container" :style="{ width: gridLayoutConfig + 'px' }">
-		<Spin :spinning="previewStore.loading">
+		<Spin :spinning="globalLoading">
 			<GridLayout v-model:layoutData="layoutData" :type="PageType.PREVIEW"></GridLayout>
 		</Spin>
 	</div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, provide } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
 import { Spin } from 'ant-design-vue';
 import GridLayout from '@/components/GridLayout/index.vue';
 import { ComponentsType, ComponentsInfo, PageType } from '@/typings/Common';
 import { gridLayoutConfig } from '@/components/GridLayout/service';
-import { usePreviewDataStore } from '@/stores/previewData';
 
 setActivePinia(createPinia());
 
@@ -20,7 +19,10 @@ const layoutData = ref(
 	JSON.parse(localStorage.getItem('layoutData') as string) as ComponentsInfo[]
 );
 
-const previewStore = usePreviewDataStore();
+const globalParams = ref<any>({});
+const globalLoading = ref(false);
+provide('globalParams', globalParams);
+provide('globalLoading', globalLoading);
 
 const initData = () => {
 	layoutData.value.forEach(item => {
@@ -32,7 +34,7 @@ const initData = () => {
 					params[v.config.key] = v.config.value;
 				}
 			});
-			previewStore.params[item.i] = params;
+			globalParams.value[item.i] = params;
 		}
 		if (item.type === ComponentsType.COMMONCONTAINER && item.children && item.children.length) {
 			const params: any = {};
@@ -49,7 +51,7 @@ const initData = () => {
 					params[v.config.key] = v.config.value;
 				}
 			});
-			previewStore.params[item.i] = params;
+			globalParams.value['common'] = params;
 		}
 
 		item.parentId = 'top';
@@ -57,9 +59,8 @@ const initData = () => {
 		if (item.config.key) {
 			params[item.config.key] = item.config.value;
 		}
-		previewStore.params[item.i] = params;
+		globalParams.value['top'] = params;
 	});
-	previewStore.layoutData = layoutData.value;
 };
 
 initData();

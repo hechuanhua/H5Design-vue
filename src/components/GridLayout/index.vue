@@ -28,7 +28,7 @@
 	>
 		<grid-item
 			ref="gridItemRef"
-			:class="['grid-item', { active: editStore.currentId === item.i }]"
+			:class="['grid-item', { active: store.currentId === item.i }]"
 			v-for="item in propsData"
 			:x="item.x"
 			:y="item.y"
@@ -81,7 +81,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:layoutData']);
-const editStore = useEditDataStore();
+const store = useEditDataStore();
 const propsData = ref(props.layoutData);
 const gridLayoutRef = ref<any>(null);
 const gridItemRef = ref<any[]>([]);
@@ -108,20 +108,20 @@ const drop = (event: DragEvent) => {
 
 		gridLayoutRef.value.dragEvent('dragstart', 'drop', position.x, position.y, 1, 1);
 		emit('update:layoutData', propsData.value);
-		editStore.currentId = uuid;
+		store.currentId = uuid;
 	}
 };
 
 const selectGridItem = (item: LayoutDataItem) => {
 	if (props.type === PageType.PREVIEW) return;
 	console.log(item, 'selectGridItem');
-	editStore.currentId = item.i;
+	store.currentId = item.i;
 };
 
 const removeItem = (item: LayoutDataItem) => {
 	propsData.value = propsData.value.filter(v => v.i !== item.i);
-	if (editStore.currentId === item.i) {
-		editStore.currentId = '';
+	if (store.currentId === item.i) {
+		store.currentId = '';
 	}
 	emit('update:layoutData', propsData.value);
 };
