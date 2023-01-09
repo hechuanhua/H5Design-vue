@@ -239,7 +239,9 @@ const echartFilterChange = (value: any) => {
   } else {
     cloneEchartData.series = cloneEchartData.series;
   }
-  cloneEchartData.legend.data = series.map((item: any) => item.name);
+  cloneEchartData.legend.data = cloneEchartData.series.map(
+    (item: any) => item.name
+  );
   cloneEchartData.xAxis = {
     ...cloneEchartData.xAxis,
     boundaryGap: true,
@@ -344,100 +346,79 @@ const fetchPageData = () => {
   )
     return;
   previewStore.loading = true;
+  document.dispatchEvent(
+    new CustomEvent("changeParams", {
+      detail: {
+        params: previewStore.params,
+        api: propsLayoutItem.value.config.api,
+      },
+      bubbles: true,
+      composed: true,
+    })
+  );
   if (propsLayoutItem.value.config.api.method === "post") {
     post(`/proxy?${propsLayoutItem.value.config.api.url}`, {
       formData: true,
       data: getFormDataParams(),
-    }).then((res: any) => {
-      previewStore.loading = false;
-      const type = propsLayoutItem.value.type;
-      if (type === ComponentsType.ECHARTS) {
-        let options: any = null;
-        if (!res.data) {
-          return (echartData.value = null);
-        }
-        if (propsLayoutItem.value.config.echartsType === "pie") {
-          options = useEchartsPieData(
-            res,
-            propsLayoutItem.value.config.echartsType
-          );
-        } else {
-          if (res.data.columns) {
-            if (!res.data.columns.length) {
-              return (echartData.value = null);
-            }
-            options = useEchartsTableData(
+    })
+      .then((res: any) => {
+        previewStore.loading = false;
+        const type = propsLayoutItem.value.type;
+        if (type === ComponentsType.ECHARTS) {
+          let options: any = null;
+          if (!res.data) {
+            return (echartData.value = null);
+          }
+          if (propsLayoutItem.value.config.echartsType === "pie") {
+            options = useEchartsPieData(
               res,
               propsLayoutItem.value.config.echartsType
             );
           } else {
-            options = useEchartsBarData(
-              res,
-              propsLayoutItem.value.config.echartsType
-            );
-          }
-        }
-        echartData_series.value = options.series.map((item: any) => ({
-          label: item.name,
-          value: item.name,
-        }));
-        initEcharts(options);
-      } else if (type === ComponentsType.TABLE) {
-        tableColumn.value = res.data.columns.map((item: any) => ({
-          title: item,
-          key: item,
-          dataIndex: item,
-        }));
-
-        // 保留2位小数
-        res.data.records.forEach((item: any) => {
-          Object.keys(item).forEach((v) => {
-            let data = item[v];
-            if (/^\d+\.\d{3}/.test(data)) {
-              item[v] = data.toFixed(2);
+            if (res.data.columns) {
+              if (!res.data.columns.length) {
+                return (echartData.value = null);
+              }
+              options = useEchartsTableData(
+                res,
+                propsLayoutItem.value.config.echartsType
+              );
+            } else {
+              options = useEchartsBarData(
+                res,
+                propsLayoutItem.value.config.echartsType
+              );
             }
-          });
-        });
+          }
+          echartData_series.value = options.series.map((item: any) => ({
+            label: item.name,
+            value: item.name,
+          }));
+          initEcharts(options);
+        } else if (type === ComponentsType.TABLE) {
+          tableColumn.value = res.data.columns.map((item: any) => ({
+            title: item,
+            key: item,
+            dataIndex: item,
+          }));
 
-        tableSource.value = res.data.records;
-      }
-    });
+          // 保留2位小数
+          res.data.records.forEach((item: any) => {
+            Object.keys(item).forEach((v) => {
+              let data = item[v];
+              if (/^\d+\.\d{3}/.test(data)) {
+                item[v] = data.toFixed(2);
+              }
+            });
+          });
+
+          tableSource.value = res.data.records;
+        }
+      })
+      .catch(() => {
+        previewStore.loading = false;
+      });
   }
-  // request({
-  // 	url: `/proxy?${propsLayoutItem.value.config.api.url}`,
-  // 	data: getFormDataParams(),
-  // 	method: propsLayoutItem.value.config.api.method,
-  // }).then((res: any) => {
-  // 	previewStore.loading = false;
-  // 	const type = propsLayoutItem.value.type;
-  // 	if (type === ComponentsType.ECHARTS) {
-  // 		let options: any = null;
-  // 		if (!res.data) {
-  // 			return (echartData.value = null);
-  // 		}
-  // 		if (propsLayoutItem.value.config.echartsType === 'pie') {
-  // 			options = useEchartsPieData(res, propsLayoutItem.value.config.echartsType);
-  // 		} else {
-  // 			if (res.data.columns) {
-  // 				if (!res.data.columns.length) {
-  // 					return (echartData.value = null);
-  // 				}
-  // 				options = useEchartsTableData(res, propsLayoutItem.value.config.echartsType);
-  // 			} else {
-  // 				options = useEchartsBarData(res, propsLayoutItem.value.config.echartsType);
-  // 			}
-  // 		}
-  // 		echartData_series.value = options.series.map((item: any) => ({
-  // 			label: item.name,
-  // 			value: item.name,
-  // 		}));
-  // 		console.log(options, 'options');
-  // 		initEcharts(options);
-  // 	} else if (type === ComponentsType.TABLE) {
-  // 		tableColumn.value = useTableData(res);
-  // 		tableSource.value = res.data.records;
-  // 	}
-  // });
 };
 
 watch(
@@ -450,15 +431,18 @@ watch(
 if (props.type === PageType.PREVIEW) {
   if (propsLayoutItem.value.config.api?.url) {
     const parentId = propsLayoutItem.value.parentId;
+    console.log(
+      parentId,
+      propsLayoutItem.value,
+      previewStore.params,
+      "parentId"
+    );
     if (parentId) {
       watch(
         () => previewStore.params[parentId],
         (newVal, oldVal) => {
           if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
           fetchPageData();
-        },
-        {
-          immediate: false,
         }
       );
     }
@@ -467,9 +451,6 @@ if (props.type === PageType.PREVIEW) {
       (newVal, oldVal) => {
         if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
         fetchPageData();
-      },
-      {
-        immediate: false,
       }
     );
   }

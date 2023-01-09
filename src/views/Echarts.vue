@@ -4,8 +4,8 @@
       ref="echartsRef"
       class="echart"
       :style="{
-        width: 1200 + 'px',
-        height: 500 + 'px',
+        width: 500 + 'px',
+        height: 1000 + 'px',
       }"
     ></div>
   </div>

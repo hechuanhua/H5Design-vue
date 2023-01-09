@@ -4,13 +4,21 @@
     <div class="operation">
       <Button @click="clearData">清空数据</Button>
       <Button type="primary" @click="preview">预览</Button>
-      <Button @click="saveVisible = true">保存</Button>
-      <!-- <Button @click="publish">发布</Button> -->
+      <Button
+        @click="
+          saveVisible = true;
+          pageTitle = '';
+        "
+        >保存</Button
+      >
+      <Button @click="updateVisible = true" v-if="templateTitle"
+        >更新模板</Button
+      >
     </div>
   </header>
   <Modal
     :visible="saveVisible"
-    :title="'确定保存？'"
+    :title="'保存新模板？'"
     @cancel="saveVisible = false"
     @ok="saveSubmit"
   >
@@ -20,17 +28,36 @@
       </FormItem>
     </Form>
   </Modal>
+  <Modal
+    :visible="updateVisible"
+    :title="'更新模板？'"
+    @cancel="updateVisible = false"
+    @ok="updateSubmit"
+  >
+    当前已存在标题为<span style="color: red; padding: 0 10px">{{
+      templateTitle
+    }}</span
+    >的模板，是否更新
+  </Modal>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Button, Modal, Form, Input, message } from "ant-design-vue";
 import { useEditDataStore } from "@/stores/editData";
-import { saveTemplate, getTemplateList } from "@/api";
+import { saveTemplate, getTemplateList, updateTemplate } from "@/api";
 
 const FormItem = Form.Item;
 const editStore = useEditDataStore();
 const saveVisible = ref(false);
+const updateVisible = ref(false);
 const pageTitle = ref("");
+
+const templateTitle = computed(() => {
+  const current = editStore.templateData.find(
+    (item) => item.tid === editStore.templateId
+  );
+  return current?.title;
+});
 
 const clearData = () => {
   editStore.$patch({
@@ -59,7 +86,22 @@ const saveSubmit = () => {
       console.log(res);
     });
 };
-const publish = () => {};
+const updateSubmit = () => {
+  updateVisible.value = false;
+  updateTemplate({
+    tid: editStore.templateId,
+    layout_data: localStorage.getItem("layoutData")!,
+  })
+    .then(() => {
+      message.success("更新成功");
+      getTemplateList().then((res) => {
+        editStore.templateData = res;
+      });
+    })
+    .catch((res) => {
+      console.log(res);
+    });
+};
 </script>
 
 <style lang="less" scoped>

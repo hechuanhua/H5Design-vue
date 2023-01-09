@@ -22,12 +22,16 @@ export const useEchartsBarData = (res: any, echartsType: string) => {
   });
   const legend = {
     data: series.map((item: any) => item.name),
+    top: "top",
   };
 
   const echartOptions = {
     series,
     xAxis,
     legend,
+    grid: {
+      top: "20%",
+    },
     tooltip: {
       trigger: "axis",
       axisPointer: {
@@ -42,7 +46,6 @@ export const useEchartsBarData = (res: any, echartsType: string) => {
   return echartOptions;
 };
 
-
 export const useEchartsTableData = (res: any, echartsType: string) => {
   const series: any[] = [];
   const xAxis: any = {
@@ -51,15 +54,16 @@ export const useEchartsTableData = (res: any, echartsType: string) => {
   };
   const legend: any = {
     data: [],
+    top: "top",
   };
   res.data.records.forEach((item: any) => {
     const x = dayjs(item[res.data.columns[0]]).format("YYYY-MM-DD");
     if (!xAxis.data.includes(x)) {
       xAxis.data.push(x);
     }
-    let data = item[res.data.columns[2]]
-    if(/^\d+\.\d{3}/.test(data)){
-      data = data.toFixed(2)
+    let data = item[res.data.columns[2]];
+    if (/^\d+\.\d{3}/.test(data)) {
+      data = data.toFixed(2);
     }
     if (legend.data.includes(item[res.data.columns[1]])) {
       const ret = series.find((v) => v.name === item[res.data.columns[1]]);
@@ -78,6 +82,9 @@ export const useEchartsTableData = (res: any, echartsType: string) => {
     series,
     xAxis,
     legend,
+    grid: {
+      top: "20%",
+    },
     tooltip: {
       trigger: "axis",
       axisPointer: {

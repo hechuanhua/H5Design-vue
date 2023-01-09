@@ -23,7 +23,7 @@ const previewStore = usePreviewDataStore();
 const get = <T>(url: string, params?: any) => {
   return new Promise<T>((resolve, reject) => {
     fetch(
-      `${url.indexOf("http") > -1 ? url : config.api + url}${
+      `${url.startsWith("http") ? url : config.api + url}${
         params ? "?" + obj2String(params) : ""
       }`,
       {
@@ -41,9 +41,9 @@ const get = <T>(url: string, params?: any) => {
           previewStore.loading = false;
         }
       })
-      .catch((e) => {
+      .catch((error) => {
         console.log("error");
-        previewStore.loading = false;
+        reject(error);
       });
   });
 };
@@ -57,7 +57,8 @@ const post = (url: string, params: any) => {
     headers = {};
   }
   return new Promise((resolve, reject) => {
-    fetch(`${url.indexOf("http") <= -1 ? url : config.api + url}`, {
+    console.log(config.api, url, "config.api");
+    fetch(`${url.startsWith("http") ? url : config.api + url}`, {
       method: "POST",
       headers: headers,
       credentials: "include",
@@ -79,9 +80,10 @@ const post = (url: string, params: any) => {
           }
         }
       })
-      .catch((e) => {
-        console.log("error");
+      .catch((error) => {
+        console.log("error", previewStore.loading);
         previewStore.loading = false;
+        reject(error);
       });
   });
 };

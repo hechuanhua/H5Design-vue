@@ -46,6 +46,6 @@ main {
   min-height: 500px;
   position: relative;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-  background: #eee;
+  background-color: #f0f2f5;
 }
 </style>
