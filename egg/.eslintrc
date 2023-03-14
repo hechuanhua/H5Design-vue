@@ -1,0 +1,10 @@
+{
+  "extends": "eslint-config-egg/typescript",
+  // "parserOptions": {
+  //   "project": "./tsconfig.json"
+  // },
+  "rules": {
+    "quotes": "off", //使用双引号
+    "comma-dangle": "off" //对象字面量项尾不能有逗号
+  }
+}

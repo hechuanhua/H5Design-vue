@@ -5,6 +5,8 @@
 - 前端：vite，vue3，pinia，mac 电脑 node 版本>=16
 - 后端：egg，mongodb，代码见 egg 文件夹（暂不开放）
 
+# 预览 
+
 ### 开发
 
 ```bash

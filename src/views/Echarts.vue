@@ -14,9 +14,9 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { useEchartsPieData } from "@/components/Core/useData";
-import { echartPie } from "@/config/exampleData";
+// import { echartPie } from "@/config/exampleData";
 const echartsRef = ref();
-const options = useEchartsPieData({ data: echartPie }, "pie");
+const options = useEchartsPieData({ data: [] }, "pie");
 onMounted(() => {
   console.log(options, echartsRef.value, "options");
   const echart = echarts.init(echartsRef.value);
